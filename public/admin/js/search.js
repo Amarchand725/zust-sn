@@ -57,8 +57,9 @@ $('.delete').on('click', function(){
                 url : delete_url,
                 type : 'DELETE',
                 success : function(response){
-                    if(response){
+                    if(response.status){
                         $('#id-'+slug).hide();
+                        $('#trash-record-count').html(response.trash_records);
                         Swal.fire(
                             'Deleted!',
                             'Your file has been deleted.',

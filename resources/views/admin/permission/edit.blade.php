@@ -1,54 +1,71 @@
-@extends('layouts.admin.app')
+@extends('admin.layouts.app')
 @section('title', $page_title)
 @section('content')
+<div id="kt_app_content" class="app-content" style="margin-top:5px">
+    <!--begin::Content container-->
+    <div id="kt_app_content_container" class="app-container ">
+        <!--begin::Navbar-->
+        <div class="card mb-5 mb-xl-10">
+            <!--begin::Card header-->
+            <div class="card-header border-0 cursor-pointer" role="button">
+                <!--begin::Card title-->
+                <div class="card-title m-0">
+                    <h3 class="fw-bolder m-0">{{ $page_title }}</h3>
+                </div>
+                <div class="content-header-right mt-3">
+                    <a href="{{ route('role.index') }}" title="All Roles" class="btn btn-primary btn-sm">View All</a>
+                </div>
+                <!--end::Card title-->
+            </div>
+            <!--begin::Card header-->
 
-<section class="content-header">
-	<div class="content-header-left">
-		<h1>Edit Permission</h1>
-	</div>
-	<div class="content-header-right">
-		<a href="{{ route('permission.index') }}" class="btn btn-primary btn-sm">View All</a>
-	</div>
-</section>
+            <!--begin::Content-->
+            <div id="" class="collapse show">
+                <!--begin::Form-->
+                <form action="{{ route('permission.update', $permission->id) }}" id="regform" class="form-horizontal" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+                    @csrf
+                    {{ method_field('PATCH') }}
 
-<section class="content">
-	<div class="row">
-		<div class="col-md-12">
-			<form action="{{ route('permission.update', $permission->id)}}" id="regform" class="form-horizontal" enctype="multipart/form-data" method="post" accept-charset="utf-8">
-				@csrf
-				{{ method_field('PATCH') }}
-				<div class="box box-info">
-					<div class="box-body">
-						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Name <span style="color: red">*</span></label>
-							<div class="col-sm-4">
-								<input type="text" class="form-control" name="guard_name" value="{{$permission->guard_name}}">
-								<input type="hidden" name="permission" value="{{ $permission->permission }}">
-								<span style="color: red">{{ $errors->first('guard_name') }}</span>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-2 control-label"></label>
-							<div class="col-sm-6">
-								<button type="submit" class="btn btn-success pull-left" name="form1">Submit</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
-</section>
+                    <div class="card-body border-top p-9">
+                        <!--begin::Input group-->
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-2 col-form-label required fw-bold fs-6">Name</label>
+                            <!--end::Label-->
 
-<script>
-	$(document).ready(function() {
-		$("#regform").validate({
-			rules: {
-				name: "required",
-				guard_name: "required",
-			}
-		});
-	});
-</script>
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <input type="text" name="name" value="{{ $permission->name }}" class="form-control form-control-lg form-control-solid" placeholder="Enter permission group name e.g User"/>
+                                <span style="color: red">{{ $errors->first('name') }}</span>
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Input group-->
+                    </div>
+                    <!--end::Card body-->
 
+                    <!--begin::Actions-->
+                    <div class="card-footer d-flex justify-content-end py-6 px-9">
+                        <button type="reset" class="btn btn-white btn-active-light-primary me-2">Discard</button>
+
+                        <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">
+                            <!--begin::Indicator-->
+                            <span class="indicator-label">
+                                Save Changes
+                            </span>
+                            <span class="indicator-progress">
+                                Please wait...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            </span>
+                            <!--end::Indicator-->
+                        </button>
+                    </div>
+                    <!--end::Actions-->
+                </form>
+                <!--end::Form-->
+            </div>
+            <!--end::Content-->
+        </div>
+    </div>
+</div>
 @endsection

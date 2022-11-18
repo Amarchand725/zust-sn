@@ -6,7 +6,7 @@
             <!--begin:Menu item-->
             <div  class="menu-item" >
                 <!--begin:Menu link-->
-                <a class="menu-link"  href="http://metro" >
+                <a class="menu-link"  href="{{ route('admin.dashboard') }}" >
                     <span  class="menu-icon" >
                         <!--begin::Svg Icon | path: assets/media/icons/duotune/art/art002.svg-->
                         <span class="svg-icon svg-icon-2">
@@ -29,63 +29,8 @@
                 </div>
                 <!--end:Menu content-->
             </div>
-            <!--end:Menu item--><!--begin:Menu item-->
-            <div  data-kt-menu-trigger="click"  class="menu-item menu-accordion" >
-                <!--begin:Menu link-->
-                <span class="menu-link" >
-                    <span  class="menu-icon" >
-                        <!--begin::Svg Icon | path: assets/media/icons/duotune/communication/com006.svg-->
-                        <span class="svg-icon svg-icon-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                <path opacity="0.3" d="M16.5 9C16.5 13.125 13.125 16.5 9 16.5C4.875 16.5 1.5 13.125 1.5 9C1.5 4.875 4.875 1.5 9 1.5C13.125 1.5 16.5 4.875 16.5 9Z" fill="currentColor"/>
-                                <path d="M9 16.5C10.95 16.5 12.75 15.75 14.025 14.55C13.425 12.675 11.4 11.25 9 11.25C6.6 11.25 4.57499 12.675 3.97499 14.55C5.24999 15.75 7.05 16.5 9 16.5Z" fill="currentColor"/>
-                                <rect x="7" y="6" width="4" height="4" rx="2" fill="currentColor"/>
-                            </svg>
-                        </span>
-                        <!--end::Svg Icon-->
-                    </span>
-                    <span  class="menu-title" >Account</span>
-                    <span  class="menu-arrow" ></span>
-                </span>
-                <!--end:Menu link--><!--begin:Menu sub-->
-                <div  class="menu-sub menu-sub-accordion menu-active-bg" >
-                    <!--begin:Menu item-->
-                    <div  class="menu-item" >
-                        <!--begin:Menu link-->
-                        <a class="menu-link"  href="http://metro/account/overview" >
-                            <span  class="menu-bullet" >
-                                <span class="bullet bullet-dot"></span>
-                            </span><span  class="menu-title" >Overview</span>
-                        </a>
-                        <!--end:Menu link-->
-                    </div>
-                    <!--end:Menu item--><!--begin:Menu item-->
-                    <div  class="menu-item" >
-                        <!--begin:Menu link-->
-                        <a class="menu-link"  href="http://metro/account/settings" >
-                            <span  class="menu-bullet" >
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span  class="menu-title" >Settings</span>
-                        </a>
-                        <!--end:Menu link-->
-                    </div>
-                    <!--end:Menu item--><!--begin:Menu item-->
-                    <div  class="menu-item" >
-                        <!--begin:Menu link-->
-                        <a class="menu-link"  href="#" title="Coming soon" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
-                            <span  class="menu-bullet" >
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span  class="menu-title" >Security</span>
-                        </a>
-                        <!--end:Menu link-->
-                    </div>
-                    <!--end:Menu item-->
-                </div>
-                <!--end:Menu sub-->
-            </div>
-            <!--end:Menu item--><!--begin:Menu item-->
+
+            <!--begin:Menu item-->
             <div  data-kt-menu-trigger="click"  class="menu-item menu-accordion" >
                 <!--begin:Menu link-->
                 <span class="menu-link" >
@@ -105,40 +50,113 @@
                     <span  class="menu-arrow" ></span>
                 </span>
                 <!--end:Menu link--><!--begin:Menu sub-->
-                <div  class="menu-sub menu-sub-accordion menu-active-bg" >
+                <div  class="menu-sub menu-sub-accordion menu-active-bg {{
+                                        request()->is('admin/user') ||
+                                        request()->is('admin/user/*') ||
+                                        request()->is('admin/role') ||
+                                        request()->is('admin/role/*') ||
+                                        request()->is('admin/permission') ||
+                                        request()->is('admin/permission/*') ||
+                                        request()->is('admin/system/setting') ||
+                                        request()->is('admin/logActivity') ||
+                                        request()->is('admin/logActivity/*') ||
+                                        request()->is('admin/system/email-config')
+                                        ? 'show' : '' }}" >
                     <!--begin:Menu item-->
                     <div  class="menu-item" >
                         <!--begin:Menu link-->
-                        <a class="menu-link" @if(!empty(systemSetting())) href="{{ route('admin.system.setting.update', systemSetting()->id) }}" @else href="{{ route('admin.system.setting') }}" @endif title="System Setting" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
-                            <span  class="menu-bullet" >
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title" >Settings</span>
-                        </a>
+                        @can('user-list')
+                            <a class="menu-link {{ request()->is('admin/user') || request()->is('admin/user/*') ? 'active' : '' }}" href="{{ route('user.index') }}" title="All Users" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                                <span  class="menu-bullet" >
+                                    <span class="fa fa-user"></span>
+                                </span>
+                                <span class="menu-title" > Users</span>
+                            </a>
+                        @endcan
                         <!--end:Menu link-->
                     </div>
                     <!--end:Menu item-->
                     <!--begin:Menu item-->
                     <div  class="menu-item" >
                         <!--begin:Menu link-->
-                        <a class="menu-link" href="http://metro/log/audit" >
-                            <span class="menu-bullet" >
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Email Configuration</span>
-                        </a>
+                        @can('role-list')
+                            <a class="menu-link {{ request()->is('admin/role') || request()->is('admin/role/*') ? 'active' : '' }}" href="{{ route('role.index') }}" title="All Roles" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                                <span  class="menu-bullet" >
+                                    <span class="fa fa-briefcase"></span>
+                                </span>
+                                <span class="menu-title" >Roles</span>
+                            </a>
+                        @endcan
                         <!--end:Menu link-->
                     </div>
                     <!--end:Menu item-->
                     <!--begin:Menu item-->
                     <div  class="menu-item" >
                         <!--begin:Menu link-->
-                        <a class="menu-link"  href="http://metro/log/system" >
-                            <span  class="menu-bullet" >
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span  class="menu-title" >System Log</span>
-                        </a>
+                        @can('permission-list')
+                            <a class="menu-link {{ request()->is('admin/permission') || request()->is('admin/permission/*') ? 'active' : '' }}" href="{{ route('permission.index') }}" title="Permissions" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                                <span  class="menu-bullet" >
+                                    <span class="fa fa-lock"></span>
+                                </span>
+                                <span class="menu-title" >Permissions</span>
+                            </a>
+                        @endcan
+                        <!--end:Menu link-->
+                    </div>
+                    <!--end:Menu item-->
+                    <!--begin:Menu item-->
+                    <div  class="menu-item" >
+                        <!--begin:Menu link-->
+                        @can('companyprofile-list')
+                            <a class="menu-link {{ request()->is('admin/system/company/profile') || request()->is('admin/system/company/profile/*') ? 'active' : '' }}" href="{{ route('admin.system.company.profile') }}" title="Company Profile" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                                <span  class="menu-bullet" >
+                                    <span class="fa fa-building"></span>
+                                </span>
+                                <span class="menu-title" >Company Profile</span>
+                            </a>
+                        @endcan
+                        <!--end:Menu link-->
+                    </div>
+                    <!--end:Menu item-->
+                    <!--begin:Menu item-->
+                    <div  class="menu-item" >
+                        <!--begin:Menu link-->
+                        @can('setting-list')
+                            <a class="menu-link {{ request()->is('admin/system/setting') || request()->is('admin/system/setting/*') ? 'active' : '' }}" href="{{ route('admin.system.setting') }}" title="Setting" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                                <span  class="menu-bullet" >
+                                    <span class="fa fa-cog"></span>
+                                </span>
+                                <span class="menu-title" >Settings</span>
+                            </a>
+                        @endcan
+                        <!--end:Menu link-->
+                    </div>
+                    <!--end:Menu item-->
+                    <!--begin:Menu item-->
+                    <div  class="menu-item" >
+                        <!--begin:Menu link-->
+                        @can('emailconfig-list')
+                            <a class="menu-link {{ request()->is('admin/system/email-config') || request()->is('admin/system/email-config/*') ? 'active' : '' }}" href="{{ route('admin.email-config') }}" title="Email Configuration" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+                                <span class="menu-bullet" >
+                                    <span class="fa fa-connectdevelop"></span>
+                                </span>
+                                <span class="menu-title">Email Configuration</span>
+                            </a>
+                        @endcan
+                        <!--end:Menu link-->
+                    </div>
+                    <!--end:Menu item-->
+                    <!--begin:Menu item-->
+                    <div  class="menu-item" >
+                        <!--begin:Menu link-->
+                        @can('logactivity-list')
+                            <a class="menu-link {{ request()->is('admin/logActivity') ? 'active' : '' }}" href="{{ route('admin.logActivity') }}" title="System Log" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+                                <span  class="menu-bullet" >
+                                    <span class="fa fa-tasks"></span>
+                                </span>
+                                <span  class="menu-title" >System Log</span>
+                            </a>
+                        @endcan
                         <!--end:Menu link-->
                     </div>
                     <!--end:Menu item-->

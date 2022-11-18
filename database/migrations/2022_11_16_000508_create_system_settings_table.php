@@ -15,13 +15,7 @@ return new class extends Migration
     {
         Schema::create('system_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('logo')->nullable();
-            $table->string('favicon')->nullable();
-            $table->string('company')->nullable();
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('website')->nullable();
-            $table->string('country')->nullable();
+            $table->integer('per_page_record')->default(10);
             $table->string('language')->nullable();
             $table->string('timezone')->nullable();
             $table->string('currency')->nullable();

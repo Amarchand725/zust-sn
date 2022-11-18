@@ -3,7 +3,7 @@
 <html lang="en" >
     <head>
         <meta charset="utf-8"/>
-        <title>Admin Login</title>
+        <title>@yield('title')</title>
         <meta name="description" content="Admin Login Panel"/>
         <meta name="keywords" content="Admin Login Panel"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>

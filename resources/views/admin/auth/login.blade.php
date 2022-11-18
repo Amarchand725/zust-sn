@@ -1,5 +1,5 @@
 @extends('admin.auth.layouts.app')
-
+@section('title', $page_title)
 @section('content')
     <div class="d-flex flex-column flex-root" id="kt_app_root">
         <!--begin::Authentication - Sign-in -->
@@ -29,13 +29,18 @@
                             <!--begin::Input group=-->
                             <div class="fv-row mb-8 fv-plugins-icon-container fv-plugins-bootstrap5-row-valid">
                                 <!--begin::Email-->
-                                <input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" value="demo@demo.com" required autofocus>
+                                <input type="email" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" value="{{ old('email') }}" required autofocus>
+                                <span class="text-danger">{{ $errors->first('email') }}</span>
+                                @if(Session::has('error'))
+                                    <span class="text-danger">{{ Session::get('error') }}</span>
+                                @endif
                                 <!--end::Email-->
                             </div>
                             <!--end::Input group=-->
                             <div class="fv-row mb-3 fv-plugins-icon-container fv-plugins-bootstrap5-row-valid">
                                 <!--begin::Password-->
-                                <input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent" value="demo">
+                                <input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent" required value="" >
+                                <span class="text-danger">{{ $errors->first('password') }}</span>
                                 <!--end::Password-->
                             </div>
                             <!--end::Input group=-->
@@ -43,7 +48,7 @@
                             <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
                                 <div></div>
                                 <!--begin::Link-->
-                                <a href="{{ route('admin.forgot_password') }}" class="link-primary">Forgot Password ?</a>
+                                <a href="{{ route('password.request') }}" class="link-primary">Forgot Password ?</a>
                                 <!--end::Link-->
                             </div>
                             <!--end::Wrapper-->
@@ -64,19 +69,21 @@
                         </form>
                     </div>
                 </div>
-                <div class="d-flex flex-center flex-wrap px-5">
-                    <div class="d-flex fw-semibold text-primary fs-base">
-                        <a href="#" class="px-5">About</a>
-                        <a href="#" class="px-5">Contact Us</a>
-                    </div>
-                </div>
             </div>
             <div class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2" style="background-image: url(http://metro/demo1/media/misc/auth-bg.png)">
                 <!--begin::Content-->
                 <div class="d-flex flex-column flex-center py-15 px-5 px-md-15 w-100">
                     <!--begin::Logo-->
-                    <a href="/" class="mb-12">
-                        <img alt="Logo" src="{{ asset('public/admin/media/logos/custom-1.png') }}" class="h-75px">
+                    @php
+                        $logo = asset('public/company/logos/default.png');
+                    @endphp
+                    @if(companyProfile()->logo)
+                        @php
+                            $logo = asset('public/company/logos').'/'.companyProfile()->logo;
+                        @endphp
+                    @endif
+                    <a href="{{ route('home') }}" class="mb-12">
+                        <img alt="Logo" src="{{ $logo }}" class="h-75px">
                     </a>
                     <!--end::Logo-->
                     <!--begin::Image-->

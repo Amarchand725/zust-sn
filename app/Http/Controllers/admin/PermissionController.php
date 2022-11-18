@@ -4,7 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Permission;
+use Spatie\Permission\Models\Permission;
 use DB;
 use Illuminate\Support\Str;
 
@@ -15,26 +15,32 @@ class PermissionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    /* function __construct()
+    function __construct()
     {
         $this->middleware('permission:permission-list|permission-create|permission-edit|permission-delete', ['only' => ['index','store']]);
         $this->middleware('permission:permission-create', ['only' => ['create','store']]);
         $this->middleware('permission:permission-edit', ['only' => ['edit','update']]);
         $this->middleware('permission:permission-delete', ['only' => ['destroy']]);
-    } */
+    }
     public function index(Request $request)
     {
+        $this->authorize('permission-list');
+        $per_page_records = 10;
+        if(!empty(systemSetting())){
+            $per_page_records = systemSetting()->per_page_record;
+        }
         if($request->ajax()){
             $query = Permission::orderby('id', 'desc')->where('id', '>', 0);
             if($request['search'] != ""){
                 $query->where('name', 'like', '%'. $request['search'] .'%');
             }
-            $permissions = $query->paginate(10);
-            return (string) view('admin.permission.search', compact('permissions'));
+            $models = $query->paginate($per_page_records);
+            return (string) view('admin.permission.search', compact('models'));
         }
         $page_title = 'All Permissions';
-        $permissions = Permission::orderby('id','DESC')->paginate(10);
-        return view('admin.permission.index', compact('permissions', 'page_title'));
+        $onlySoftDeleted = Permission::onlyTrashed()->get();
+        $models = Permission::orderby('id','DESC')->paginate($per_page_records);
+        return view('admin.permission.index', compact('models', 'page_title', 'onlySoftDeleted'));
     }
 
     /**
@@ -44,6 +50,7 @@ class PermissionController extends Controller
      */
     public function create()
     {
+        $this->authorize('permission-create');
         $permission = Permission::get();
         $page_title = 'Add Permission';
         return view('admin.permission.create',compact('permission', 'page_title'));
@@ -116,6 +123,7 @@ class PermissionController extends Controller
      */
     public function edit($id)
     {
+        $this->authorize('permission-edit');
         $permission = Permission::find($id);
         $page_title = 'Edit Permission';
 
@@ -132,11 +140,11 @@ class PermissionController extends Controller
     public function update(Request $request, $permission_id)
     {
         $this->validate($request, [
-            'guard_name' => 'required',
+            'name' => 'required',
         ]);
 
         $permission = Permission::find($permission_id);
-        $permission->name = str_replace(' ', '-', Str::lower($request->guard_name)).'-'.$request->permission;
+        $permission->name = $request->name;
         $permission->save();
 
         return redirect()->route('permission.index')
@@ -150,9 +158,39 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
-        $ifdeleted = DB::table("permissions")->where('id', $id)->delete();
+        $ifdeleted = Permission::findOrFail($id)->delete();
+        $onlySoftDeleted = Permission::onlyTrashed()->count();
         if($ifdeleted){
-            return true;
+            return response()->json([
+                'status' => true,
+                'trash_records' => $onlySoftDeleted
+            ]);
         }
+    }
+    public function trashAllPermission(Request $request)
+    {
+        $page_title = 'All Trashed Records';
+        $per_page_records = 10;
+        if(!empty(systemSetting())){
+            $per_page_records = systemSetting()->per_page_record;
+        }
+        if($request->ajax()){
+            $query = Permission::where('id', '>', 0);
+            if($request['search'] != ""){
+                $query->where('name', 'like', '%'. $request['search'] .'%');
+            }
+            if($request['status'] != "All"){
+                $query->where('status', $request['status']);
+            }
+            $models = $query->onlyTrashed()->paginate($per_page_records);
+            return (string) view('admin.permission.trash-search', compact('models'));
+        }
+        $models = Permission::onlyTrashed()->paginate($per_page_records);
+        return view('admin.permission.trash-index', compact('models', 'page_title'));
+    }
+    public function restore($id)
+    {
+        Permission::onlyTrashed()->where('id', $id)->restore();
+        return redirect()->back()->with('message', 'Record Restored Successfully.');
     }
 }

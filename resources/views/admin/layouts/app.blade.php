@@ -7,7 +7,21 @@
         <meta name="description" content="description"/>
         <meta name="keywords" content="keywords"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="shortcut icon" href="{{ asset('public/admin') }}/media/logos/favicon.ico"/>
+        @php
+            $favicon = asset('public/company/logos/default.png');
+            $logo = asset('public/company/logos/default.png');
+        @endphp
+        @if(!empty(companyProfile()) && companyProfile()->favicon)
+            @php
+                $favicon = asset('public/company/favicons').'/'.companyProfile()->favicon;
+            @endphp
+        @endif
+        @if(!empty(companyProfile()) && companyProfile()->logo)
+            @php
+                $logo = asset('public/company/logos').'/'.companyProfile()->logo;
+            @endphp
+        @endif
+        <link rel="shortcut icon" href="{{ $favicon }}"/>
         <meta name="csrf-token" id="token" content="{{ csrf_token() }}" />
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700"/>
@@ -60,8 +74,8 @@
                         <!--end::sidebar mobile toggle-->
                         <!--begin::Mobile logo-->
                         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-                            <a href="/" class="d-lg-none">
-                                <img alt="Logo" src="{{ asset('public/admin') }}/media/logos/default-small.svg" class="h-30px" />
+                            <a href="{{ route('home') }}" class="d-lg-none">
+                                <img alt="Logo" src="{{ $logo }}" class="h-30px" />
                             </a>
                         </div>
                         <!--end::Mobile logo-->
@@ -80,9 +94,23 @@
                         <!--begin::Logo-->
                         <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
                             <!--begin::Logo image-->
-                            <a href="/">
-                                <img alt="Logo" src="{{ asset('public/admin') }}/media/logos/default-dark.svg" class="h-25px app-sidebar-logo-default" />
-                                <img alt="Logo" src="{{ asset('public/admin') }}/media/logos/default-small.svg" class="h-20px app-sidebar-logo-minimize" />
+                            <a href="{{ route('admin.dashboard') }}">
+                                <img alt="Logo" src="{{ $logo }}" class="h-55px app-sidebar-logo-default" />
+                                <img alt="Logo" src="{{ $logo }}" class="h-20px app-sidebar-logo-minimize" />
+                                @if(companyProfile())
+                                    @php
+                                        $string = "Progress in Veterinary Science";
+
+                                        function initials($str) {
+                                            $ret = '';
+                                            foreach (explode(' ', $str) as $word)
+                                                $ret .= strtoupper($word[0]);
+                                            return $ret;
+                                        }
+
+                                    @endphp
+                                    {{ initials(companyProfile()->company) }}
+                                @endif
                             </a>
                             <!--end::Logo image-->
                             <!--begin::Sidebar toggle-->
