@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 use App\Models\UserProfile;
 use Spatie\Permission\Models\Permission;
 use Auth;
@@ -16,8 +17,18 @@ class AdminController extends Controller
     public function dashboard()
     {
         $page_title = 'Admin Dashboard';
-        $users = User::get();
-        return view('admin.dashboard', compact('page_title', 'users'));
+        $data = [];
+        $data['users'] = User::get();
+        $data['active_users'] = User::where('status', 1)->get();
+        $data['in_active_users'] = User::where('status', 0)->get();
+        $data['new_users'] = User::orderby('id', 'desc')->take(5)->get();
+
+        $data['roles'] = Role::get();
+        $data['active_roles'] = Role::where('status', 1)->get();
+        $data['in_active_roles'] = Role::where('status', 0)->get();
+        $data['new_roles'] = Role::orderby('id', 'desc')->take(5)->get();
+
+        return view('admin.dashboard', compact('page_title', 'data'));
     }
     public function login()
     {
@@ -43,14 +54,11 @@ class AdminController extends Controller
                 return response()->json([
                     'status' => 'success',
                 ]);
-                // return redirect()->route('admin.dashboard');
             }
             return response()->json([
                 'status' => 'failed',
             ]);
-            // return redirect()->back()->with('error', '');
         }elseif(!empty($user) && $user->status==0){
-            // return redirect()->back()->with('error', 'Your account is not active verify your email we have sent you verification link.!');
             return response()->json([
                 'status' => 'failed-inactive',
             ]);
@@ -58,7 +66,6 @@ class AdminController extends Controller
             return response()->json([
                 'status' => 'failed-credential',
             ]);
-            // return redirect()->back()->with('error', '');
         }
     }
 

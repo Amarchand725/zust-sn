@@ -4,126 +4,212 @@
 @endpush
 
 @section('content')
-    <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
-        <!--begin::Content wrapper-->
-        <div class="d-flex flex-column flex-column-fluid mt-5">
-            <!--begin::Content-->
-            <div id="kt_app_content" class="app-content " >
-                <!--begin::Content container-->
-                <div id="kt_app_content_container" class="app-container ">
-                    <!--begin::Row-->
-                    <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
-                        <!--begin::Col-->
-                        <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10">
-                            <!--begin::Card widget 20-->
-                            <div class="card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end h-md-50 mb-5 mb-xl-10" style="background-color: #F1416C;background-image:url('{{ asset('public/admin') }}/media/patterns/vector-1.png')">
-                                <!--begin::Header-->
-                                <div class="card-header pt-5">
-                                    <!--begin::Title-->
-                                    <div class="card-title d-flex flex-column">
-                                        <!--begin::Amount-->
-                                        <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2">{{ count($users) }}</span>
-                                        <!--end::Amount-->
-                                        <!--begin::Subtitle-->
-                                        <span class="text-white opacity-75 pt-1 fw-semibold fs-6">Total Users</span>
-                                        <!--end::Subtitle-->
-                                    </div>
-                                    <!--end::Title-->
-                                </div>
-                                <!--end::Header-->
-                                <!--begin::Card body-->
-                                <div class="card-body d-flex align-items-end pt-0">
-                                    <!--begin::Progress-->
-                                    <div class="d-flex align-items-center flex-column mt-3 w-100">
-                                        <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mt-auto mb-2">
-                                            <span>43 Pending</span>
-                                            <span>72%</span>
+    <div id="kt_app_content" class="app-content " style="margin-top:2%">
+        <!--begin::Content container-->
+        <div id="kt_app_content_container" class="app-container ">
+            <!--begin::Row-->
+            <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
+                <!--begin::Col-->
+                <div class="col-xxl-6">
+                    <!--begin::Card widget 18-->
+                    <div class="card card-flush h-xl-100">
+                        <!--begin::Body-->
+                        <div class="card-body py-9">
+                            <!--begin::Row-->
+                            <div class="row gx-9 h-100">
+                                <!--begin::Col-->
+                                <div class="col-sm-12">
+                                    <!--begin::Wrapper-->
+                                    <div class="d-flex flex-column h-100">
+                                        <!--begin::Header-->
+                                        <div class="mb-7">
+                                            <!--begin::Headin-->
+                                            <div class="d-flex flex-stack mb-6">
+                                                <!--begin::Title-->
+                                                <div class="flex-shrink-0 me-5">
+                                                    <span class="text-gray-800 fs-1 fw-bold">{{ count($data['users']) }} USERS</span>
+                                                </div>
+                                                <!--end::Title-->
+                                            </div>
+                                            <!--end::Heading-->
                                         </div>
-                                        <div class="h-8px mx-3 w-100 bg-white bg-opacity-50 rounded">
-                                            <div class="bg-white rounded h-8px" role="progressbar" style="width: 72%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <!--end::Header-->
+                                        <!--begin::Body-->
+                                        <div class="mb-6">
+                                            <!--begin::Stats-->
+                                            <div class="d-flex">
+                                                <!--begin::Stat-->
+                                                <div class="border border-gray-300 border-dashed rounded min-w-100px w-100 py-2 px-4 me-6 mb-3">
+                                                    <!--begin::Date-->
+                                                    <span class="fs-6 text-gray-700 fw-bold">ACTIVE USERS</span>
+                                                    <!--end::Date-->
+                                                    <!--begin::Label-->
+                                                    <div class="fw-semibold text-gray-400">{{ count($data['active_users']) }}</div>
+                                                    <!--end::Label-->
+                                                </div>
+                                                <!--end::Stat-->
+                                                <!--begin::Stat-->
+                                                <div class="border border-gray-300 border-dashed rounded min-w-100px w-100 py-2 px-4 mb-3">
+                                                    <!--begin::Number-->
+                                                    <span class="fs-6 text-gray-700 fw-bold">IN-ACTIVE USERS</span>
+                                                    <!--end::Number-->
+                                                    <!--begin::Label-->
+                                                    <div class="fw-semibold text-gray-400">{{ count($data['in_active_users']) }}</div>
+                                                    <!--end::Label-->
+                                                </div>
+                                                <!--end::Stat-->
+                                            </div>
+                                            <!--end::Stats-->
                                         </div>
-                                    </div>
-                                    <!--end::Progress-->
-                                </div>
-                                <!--end::Card body-->
-                            </div>
-                            <!--end::Card widget 20-->
+                                        <!--end::Body-->
 
-                            <!--begin::Card widget 7-->
-                            <div class="card card-flush h-md-50 mb-5 mb-xl-10">
-                                <!--begin::Header-->
-                                <div class="card-header pt-5">
-                                    <!--begin::Title-->
-                                    <div class="card-title d-flex flex-column">
-                                        <!--begin::Amount-->
-                                        <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">357</span>
-                                        <!--end::Amount-->
-                                        <!--begin::Subtitle-->
-                                        <span class="text-gray-400 pt-1 fw-semibold fs-6">Professionals</span>
-                                        <!--end::Subtitle-->
+                                        <!--begin::Footer-->
+                                        <div class="d-flex flex-stack mt-auto bd-highlight">
+                                            <!--begin::Users group-->
+                                            <div class="symbol-group symbol-hover flex-nowrap">
+                                                @foreach ($data['new_users'] as $user)
+                                                    @php $avatar = ''; @endphp
+                                                    @if(!empty($user->hasProfile->avatar))
+                                                        @php
+                                                            $avatar = asset('public/avatar').'/'.$user->hasProfile->avatar;
+                                                        @endphp
+                                                    @endif
+                                                    <div class="symbol symbol-35px symbol-circle" title="{{ $user->name }}" data-bs-toggle="tooltip" aria-label="{{ $user->name }}" data-kt-initialized="1">
+                                                        @if($avatar)
+                                                            <img alt="Pic" src="{{ $avatar }}">
+                                                        @else
+                                                            <span class="symbol-label bg-primary text-inverse-primary fw-bold">
+                                                                {{ Str::upper(mb_substr($user->name, 0, 1)) }}
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            <!--end::Users group-->
+                                            <!--begin::Actions-->
+                                            <a href="{{ route('user.index') }}" class="text-primary opacity-75-hover fs-6 fw-semibold">View All Users
+                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr095.svg-->
+                                            <span class="svg-icon svg-icon-4 svg-icon-gray-800 ms-1">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.3" d="M4.7 17.3V7.7C4.7 6.59543 5.59543 5.7 6.7 5.7H9.8C10.2694 5.7 10.65 5.31944 10.65 4.85C10.65 4.38056 10.2694 4 9.8 4H5C3.89543 4 3 4.89543 3 6V19C3 20.1046 3.89543 21 5 21H18C19.1046 21 20 20.1046 20 19V14.2C20 13.7306 19.6194 13.35 19.15 13.35C18.6806 13.35 18.3 13.7306 18.3 14.2V17.3C18.3 18.4046 17.4046 19.3 16.3 19.3H6.7C5.59543 19.3 4.7 18.4046 4.7 17.3Z" fill="currentColor"></path>
+                                                    <rect x="21.9497" y="3.46448" width="13" height="2" rx="1" transform="rotate(135 21.9497 3.46448)" fill="currentColor"></rect>
+                                                    <path d="M19.8284 4.97161L19.8284 9.93937C19.8284 10.5252 20.3033 11 20.8891 11C21.4749 11 21.9497 10.5252 21.9497 9.93937L21.9497 3.05029C21.9497 2.498 21.502 2.05028 20.9497 2.05028L14.0607 2.05027C13.4749 2.05027 13 2.52514 13 3.11094C13 3.69673 13.4749 4.17161 14.0607 4.17161L19.0284 4.17161C19.4702 4.17161 19.8284 4.52978 19.8284 4.97161Z" fill="currentColor"></path>
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon--></a>
+                                            <!--end::Actions-->
+                                        </div>
+                                        <!--end::Footer-->
                                     </div>
-                                    <!--end::Title-->
+                                    <!--end::Wrapper-->
                                 </div>
-                                <!--end::Header-->
-                                <!--begin::Card body-->
-                                <div class="card-body d-flex flex-column justify-content-end pe-0">
-                                    <!--begin::Title-->
-                                    <span class="fs-6 fw-bolder text-gray-800 d-block mb-2">Today’s Heroes</span>
-                                    <!--end::Title-->
-                                    <!--begin::Users group-->
-                                    <div class="symbol-group symbol-hover flex-nowrap">
-                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Alan Warden">
-                                            <span class="symbol-label bg-warning text-inverse-warning fw-bold">A</span>
-                                        </div>
-                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Michael Eberon">
-                                            <img alt="Pic" src={{ asset('public/admin') }}/media/avatars/300-11.jpg />
-                                        </div>
-                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Susan Redwood">
-                                            <span class="symbol-label bg-primary text-inverse-primary fw-bold">S</span>
-                                        </div>
-                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Melody Macy">
-                                            <img alt="Pic" src={{ asset('public/admin') }}/media/avatars/300-2.jpg />
-                                        </div>
-                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Perry Matthew">
-                                            <span class="symbol-label bg-danger text-inverse-danger fw-bold">P</span>
-                                        </div>
-                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Barry Walter">
-                                            <img alt="Pic" src={{ asset('public/admin') }}/media/avatars/300-12.jpg />
-                                        </div>
-                                        <a href="#" class="symbol symbol-35px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
-                                            <span class="symbol-label bg-dark text-gray-300 fs-8 fw-bold">+42</span>
-                                        </a>
-                                    </div>
-                                    <!--end::Users group-->
-                                </div>
-                                <!--end::Card body-->
+                                <!--end::Col-->
                             </div>
-                            <!--end::Card widget 7-->
+                            <!--end::Row-->
                         </div>
-                        <!--end::Col-->
+                        <!--end::Body-->
                     </div>
-                    <!--end::Row-->
+                    <!--end::Card widget 18-->
                 </div>
-                <!--end::Content container-->
-            </div>
-            <!--end::Content-->
+                <!--end::Col-->
 
-        </div>
-        <!--end::Content wrapper-->
-        <!--begin::Footer-->
-        <div id="kt_app_footer" class="app-footer">
-            <!--begin::Footer container-->
-            <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
-                <!--begin::Copyright-->
-                <div class="text-dark order-2 order-md-1">
-                    <span class="text-muted fw-semibold me-1">{{ date('Y') }}&copy;</span>
-                    <a href="" target="_blank" class="text-gray-800 text-hover-primary">@if(companyProfile()) {{ companyProfile()->company }} @else Admin Default @endif</a>
+                <!--begin::Col-->
+                <div class="col-xxl-6">
+                    <!--begin::Card widget 18-->
+                    <div class="card card-flush h-xl-100">
+                        <!--begin::Body-->
+                        <div class="card-body py-9">
+                            <!--begin::Row-->
+                            <div class="row gx-9 h-100">
+                                <!--begin::Col-->
+                                <div class="col-sm-12">
+                                    <!--begin::Wrapper-->
+                                    <div class="d-flex flex-column h-100">
+                                        <!--begin::Header-->
+                                        <div class="mb-7">
+                                            <!--begin::Headin-->
+                                            <div class="d-flex flex-stack mb-6">
+                                                <!--begin::Title-->
+                                                <div class="flex-shrink-0 me-5">
+                                                    <span class="text-gray-800 fs-1 fw-bold">{{ count($data['roles']) }} ROLES</span>
+                                                </div>
+                                                <!--end::Title-->
+                                            </div>
+                                            <!--end::Heading-->
+                                        </div>
+                                        <!--end::Header-->
+                                        <!--begin::Body-->
+                                        <div class="mb-6">
+                                            <!--begin::Stats-->
+                                            <div class="d-flex">
+                                                <!--begin::Stat-->
+                                                <div class="border border-gray-300 border-dashed rounded min-w-100px w-100 py-2 px-4 me-6 mb-3">
+                                                    <!--begin::Date-->
+                                                    <span class="fs-6 text-gray-700 fw-bold">ACTIVE ROLES</span>
+                                                    <!--end::Date-->
+                                                    <!--begin::Label-->
+                                                    <div class="fw-semibold text-gray-400">{{ count($data['active_roles']) }}</div>
+                                                    <!--end::Label-->
+                                                </div>
+                                                <!--end::Stat-->
+                                                <!--begin::Stat-->
+                                                <div class="border border-gray-300 border-dashed rounded min-w-100px w-100 py-2 px-4 mb-3">
+                                                    <!--begin::Number-->
+                                                    <span class="fs-6 text-gray-700 fw-bold">IN-ACTIVE ROLES</span>
+                                                    <!--end::Number-->
+                                                    <!--begin::Label-->
+                                                    <div class="fw-semibold text-gray-400">{{ count($data['in_active_roles']) }}</div>
+                                                    <!--end::Label-->
+                                                </div>
+                                                <!--end::Stat-->
+                                            </div>
+                                            <!--end::Stats-->
+                                        </div>
+                                        <!--end::Body-->
+
+                                        <!--begin::Footer-->
+                                        <div class="d-flex flex-stack mt-auto bd-highlight">
+                                            <!--begin::Users group-->
+                                            <div class="symbol-group symbol-hover flex-nowrap">
+                                                @foreach ($data['new_roles'] as $role)
+                                                    <div class="symbol symbol-35px symbol-circle" title="{{ $role->name }}" data-bs-toggle="tooltip" aria-label="{{ $role->name }}" data-kt-initialized="1">
+                                                        <span class="symbol-label bg-primary text-inverse-primary fw-bold">
+                                                            {{ Str::upper(mb_substr($role->name, 0, 1)) }}
+                                                        </span>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            <!--end::Users group-->
+                                            <!--begin::Actions-->
+                                            <a href="{{ route('role.index') }}" class="text-primary opacity-75-hover fs-6 fw-semibold">View All Roles
+                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr095.svg-->
+                                            <span class="svg-icon svg-icon-4 svg-icon-gray-800 ms-1">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.3" d="M4.7 17.3V7.7C4.7 6.59543 5.59543 5.7 6.7 5.7H9.8C10.2694 5.7 10.65 5.31944 10.65 4.85C10.65 4.38056 10.2694 4 9.8 4H5C3.89543 4 3 4.89543 3 6V19C3 20.1046 3.89543 21 5 21H18C19.1046 21 20 20.1046 20 19V14.2C20 13.7306 19.6194 13.35 19.15 13.35C18.6806 13.35 18.3 13.7306 18.3 14.2V17.3C18.3 18.4046 17.4046 19.3 16.3 19.3H6.7C5.59543 19.3 4.7 18.4046 4.7 17.3Z" fill="currentColor"></path>
+                                                    <rect x="21.9497" y="3.46448" width="13" height="2" rx="1" transform="rotate(135 21.9497 3.46448)" fill="currentColor"></rect>
+                                                    <path d="M19.8284 4.97161L19.8284 9.93937C19.8284 10.5252 20.3033 11 20.8891 11C21.4749 11 21.9497 10.5252 21.9497 9.93937L21.9497 3.05029C21.9497 2.498 21.502 2.05028 20.9497 2.05028L14.0607 2.05027C13.4749 2.05027 13 2.52514 13 3.11094C13 3.69673 13.4749 4.17161 14.0607 4.17161L19.0284 4.17161C19.4702 4.17161 19.8284 4.52978 19.8284 4.97161Z" fill="currentColor"></path>
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon--></a>
+                                            <!--end::Actions-->
+                                        </div>
+                                        <!--end::Footer-->
+                                    </div>
+                                    <!--end::Wrapper-->
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Row-->
+                        </div>
+                        <!--end::Body-->
+                    </div>
+                    <!--end::Card widget 18-->
                 </div>
-                <!--end::Copyright-->
+                <!--end::Col-->
             </div>
-            <!--end::Footer container-->
+            <!--end::Row-->
         </div>
-        <!--end::Footer-->
+        <!--end::Content container-->
     </div>
 @endsection
 

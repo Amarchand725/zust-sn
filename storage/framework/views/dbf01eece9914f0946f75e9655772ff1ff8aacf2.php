@@ -10,7 +10,6 @@
                     <!--begin::Wrapper-->
                     <div class="w-lg-500px p-10">
                         <!--begin::Signin Form kt_sign_in_form-->
-                        
                         <input type="hidden" id="admin-dashboard-route" value="<?php echo e(route('admin.dashboard')); ?>">
                         <form class="form w-100 fv-plugins-bootstrap5 fv-plugins-framework" id="sign_in_form" data-action="<?php echo e(route('admin.login')); ?>">
                             <?php echo csrf_field(); ?>
