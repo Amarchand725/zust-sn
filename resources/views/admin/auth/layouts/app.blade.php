@@ -20,6 +20,8 @@
             <link rel="stylesheet" href="{{ asset('public/admin/plugins/global/plugins-custom.bundle.css') }}">
         </noscript>
         <link href="{{ asset('public/admin/css/style.bundle.css') }}" rel="stylesheet" type="text/css"/>
+
+        @stack('css')
     </head>
 
     <body  id="kt_body"   class="bg-body"   data-kt-name="metronic">
@@ -42,11 +44,12 @@
         <!--end::Theme mode setup on page load-->
 
         @yield('content')
-
+        <script src="https://code.jquery.com/jquery-3.6.1.js" crossorigin="anonymous"></script>
         <script src="{{ asset('public/admin/plugins/global/plugins.bundle.js') }}"></script>
         <script src="{{ asset('public/admin/js/scripts.bundle.js') }}"></script>
         <script src="{{ asset('public/admin/js/custom/widgets.js') }}"></script>
 
         <script src="{{ asset('public/admin/js/custom/authentication/sign-in/general.js') }}"></script>
+        @stack('js')
     </body>
 </html>

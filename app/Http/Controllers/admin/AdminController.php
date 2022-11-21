@@ -40,13 +40,25 @@ class AdminController extends Controller
             $credentials = $request->only('email', 'password');
 
             if (Auth::attempt($credentials)) {
-                return redirect()->route('admin.dashboard');
+                return response()->json([
+                    'status' => 'success',
+                ]);
+                // return redirect()->route('admin.dashboard');
             }
-            return redirect()->back()->with('error', 'Failed to login try again.!');
+            return response()->json([
+                'status' => 'failed',
+            ]);
+            // return redirect()->back()->with('error', '');
         }elseif(!empty($user) && $user->status==0){
-            return redirect()->back()->with('error', 'Your account is not active verify your email we have sent you verification link.!');
+            // return redirect()->back()->with('error', 'Your account is not active verify your email we have sent you verification link.!');
+            return response()->json([
+                'status' => 'failed-inactive',
+            ]);
         }else{
-            return redirect()->back()->with('error', 'Credentials not matched try again!');
+            return response()->json([
+                'status' => 'failed-credential',
+            ]);
+            // return redirect()->back()->with('error', '');
         }
     }
 

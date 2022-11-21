@@ -6,7 +6,7 @@
             <!--begin:Menu item-->
             <div  class="menu-item" >
                 <!--begin:Menu link-->
-                <a class="menu-link"  href="{{ route('admin.dashboard') }}" >
+                <a class="menu-link"  href="<?php echo e(route('admin.dashboard')); ?>" >
                     <span  class="menu-icon" >
                         <!--begin::Svg Icon | path: assets/media/icons/duotune/art/art002.svg-->
                         <span class="svg-icon svg-icon-2">
@@ -50,8 +50,7 @@
                     <span  class="menu-arrow" ></span>
                 </span>
                 <!--end:Menu link--><!--begin:Menu sub-->
-                <div  class="menu-sub menu-sub-accordion menu-active-bg {{
-                                        request()->is('admin/user') ||
+                <div  class="menu-sub menu-sub-accordion menu-active-bg <?php echo e(request()->is('admin/user') ||
                                         request()->is('admin/user/*') ||
                                         request()->is('admin/role') ||
                                         request()->is('admin/role/*') ||
@@ -62,102 +61,102 @@
                                         request()->is('admin/logActivity') ||
                                         request()->is('admin/logActivity/*') ||
                                         request()->is('admin/system/email-config')
-                                        ? 'show' : '' }}" >
+                                        ? 'show' : ''); ?>" >
                     <!--begin:Menu item-->
                     <div  class="menu-item" >
                         <!--begin:Menu link-->
-                        @can('user-list')
-                            <a class="menu-link {{ request()->is('admin/user') || request()->is('admin/user/*') ? 'active' : '' }}" href="{{ route('user.index') }}" title="All Users" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('user-list')): ?>
+                            <a class="menu-link <?php echo e(request()->is('admin/user') || request()->is('admin/user/*') ? 'active' : ''); ?>" href="<?php echo e(route('user.index')); ?>" title="All Users" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
                                 <span  class="menu-bullet" >
                                     <span class="fa fa-user"></span>
                                 </span>
                                 <span class="menu-title" > Users</span>
                             </a>
-                        @endcan
+                        <?php endif; ?>
                         <!--end:Menu link-->
                     </div>
                     <!--end:Menu item-->
                     <!--begin:Menu item-->
                     <div  class="menu-item" >
                         <!--begin:Menu link-->
-                        @can('role-list')
-                            <a class="menu-link {{ request()->is('admin/role') || request()->is('admin/role/*') ? 'active' : '' }}" href="{{ route('role.index') }}" title="All Roles" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('role-list')): ?>
+                            <a class="menu-link <?php echo e(request()->is('admin/role') || request()->is('admin/role/*') ? 'active' : ''); ?>" href="<?php echo e(route('role.index')); ?>" title="All Roles" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
                                 <span  class="menu-bullet" >
                                     <span class="fa fa-briefcase"></span>
                                 </span>
                                 <span class="menu-title" >Roles</span>
                             </a>
-                        @endcan
+                        <?php endif; ?>
                         <!--end:Menu link-->
                     </div>
                     <!--end:Menu item-->
                     <!--begin:Menu item-->
                     <div  class="menu-item" >
                         <!--begin:Menu link-->
-                        @can('permission-list')
-                            <a class="menu-link {{ request()->is('admin/permission') || request()->is('admin/permission/*') ? 'active' : '' }}" href="{{ route('permission.index') }}" title="Permissions" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('permission-list')): ?>
+                            <a class="menu-link <?php echo e(request()->is('admin/permission') || request()->is('admin/permission/*') ? 'active' : ''); ?>" href="<?php echo e(route('permission.index')); ?>" title="Permissions" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
                                 <span  class="menu-bullet" >
                                     <span class="fa fa-lock"></span>
                                 </span>
                                 <span class="menu-title" >Permissions</span>
                             </a>
-                        @endcan
+                        <?php endif; ?>
                         <!--end:Menu link-->
                     </div>
                     <!--end:Menu item-->
                     <!--begin:Menu item-->
                     <div  class="menu-item" >
                         <!--begin:Menu link-->
-                        @can('companyprofile-list')
-                            <a class="menu-link {{ request()->is('admin/system/company/profile') || request()->is('admin/system/company/profile/*') ? 'active' : '' }}" href="{{ route('admin.system.company.profile') }}" title="Company Profile" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('companyprofile-list')): ?>
+                            <a class="menu-link <?php echo e(request()->is('admin/system/company/profile') || request()->is('admin/system/company/profile/*') ? 'active' : ''); ?>" href="<?php echo e(route('admin.system.company.profile')); ?>" title="Company Profile" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
                                 <span  class="menu-bullet" >
                                     <span class="fa fa-building"></span>
                                 </span>
                                 <span class="menu-title" >Company Profile</span>
                             </a>
-                        @endcan
+                        <?php endif; ?>
                         <!--end:Menu link-->
                     </div>
                     <!--end:Menu item-->
                     <!--begin:Menu item-->
                     <div  class="menu-item" >
                         <!--begin:Menu link-->
-                        @can('setting-list')
-                            <a class="menu-link {{ request()->is('admin/system/setting') || request()->is('admin/system/setting/*') ? 'active' : '' }}" href="{{ route('admin.system.setting') }}" title="Setting" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('setting-list')): ?>
+                            <a class="menu-link <?php echo e(request()->is('admin/system/setting') || request()->is('admin/system/setting/*') ? 'active' : ''); ?>" href="<?php echo e(route('admin.system.setting')); ?>" title="Setting" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
                                 <span  class="menu-bullet" >
                                     <span class="fa fa-cog"></span>
                                 </span>
                                 <span class="menu-title" >Settings</span>
                             </a>
-                        @endcan
+                        <?php endif; ?>
                         <!--end:Menu link-->
                     </div>
                     <!--end:Menu item-->
                     <!--begin:Menu item-->
                     <div  class="menu-item" >
                         <!--begin:Menu link-->
-                        @can('emailconfig-list')
-                            <a class="menu-link {{ request()->is('admin/system/email-config') || request()->is('admin/system/email-config/*') ? 'active' : '' }}" href="{{ route('admin.email-config') }}" title="Email Configuration" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('emailconfig-list')): ?>
+                            <a class="menu-link <?php echo e(request()->is('admin/system/email-config') || request()->is('admin/system/email-config/*') ? 'active' : ''); ?>" href="<?php echo e(route('admin.email-config')); ?>" title="Email Configuration" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
                                 <span class="menu-bullet" >
                                     <span class="fa fa-connectdevelop"></span>
                                 </span>
                                 <span class="menu-title">Email Configuration</span>
                             </a>
-                        @endcan
+                        <?php endif; ?>
                         <!--end:Menu link-->
                     </div>
                     <!--end:Menu item-->
                     <!--begin:Menu item-->
                     <div  class="menu-item" >
                         <!--begin:Menu link-->
-                        @can('logactivity-list')
-                            <a class="menu-link {{ request()->is('admin/logActivity') ? 'active' : '' }}" href="{{ route('admin.logActivity') }}" title="System Log" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('logactivity-list')): ?>
+                            <a class="menu-link <?php echo e(request()->is('admin/logActivity') ? 'active' : ''); ?>" href="<?php echo e(route('admin.logActivity')); ?>" title="System Log" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
                                 <span  class="menu-bullet" >
                                     <span class="fa fa-tasks"></span>
                                 </span>
                                 <span  class="menu-title" >System Log</span>
                             </a>
-                        @endcan
+                        <?php endif; ?>
                         <!--end:Menu link-->
                     </div>
                     <!--end:Menu item-->
@@ -170,3 +169,4 @@
     </div>
     <!--end::Menu wrapper-->
 </div>
+<?php /**PATH C:\wamp\www\admin-default\resources\views/admin/layouts/sidebar.blade.php ENDPATH**/ ?>

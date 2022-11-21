@@ -1,0 +1,6 @@
+<link rel="preload" href="<?php echo e(asset('public/admin')); ?>/plugins/custom/fullcalendar/fullcalendar.bundle.css" as="style" onload="this.onload=null;this.rel='stylesheet'" type="text/css"><noscript><link rel="stylesheet" href="<?php echo e(asset('public/admin')); ?>/plugins/custom/fullcalendar/fullcalendar.bundle.css"></noscript>
+<link rel="preload" href="<?php echo e(asset('public/admin')); ?>/plugins/global/plugins.bundle.css" as="style" onload="this.onload=null;this.rel='stylesheet'" type="text/css"><noscript><link rel="stylesheet" href="<?php echo e(asset('public/admin')); ?>/plugins/global/plugins.bundle.css"></noscript>
+<link rel="preload" href="<?php echo e(asset('public/admin')); ?>/plugins/global/plugins-custom.bundle.css" as="style" onload="this.onload=null;this.rel='stylesheet'" type="text/css"><noscript><link rel="stylesheet" href="<?php echo e(asset('public/admin')); ?>/plugins/global/plugins-custom.bundle.css"></noscript>
+<link href="<?php echo e(asset('public/admin')); ?>/css/style.bundle.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="<?php echo e(asset('public/admin/css/toastr.min.css')); ?>">
+<?php /**PATH C:\wamp\www\admin-default\resources\views/admin/layouts/styles.blade.php ENDPATH**/ ?>

@@ -1,6 +1,5 @@
-@extends('admin.layouts.app')
-@section('title', $page_title)
-@section('content')
+<?php $__env->startSection('title', $page_title); ?>
+<?php $__env->startSection('content'); ?>
     <div id="kt_app_content" class="app-content" style="margin-top:5px">
         <!--begin::Content container-->
         <div id="kt_app_content_container" class="app-container ">
@@ -10,7 +9,7 @@
                 <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
                     <!--begin::Card title-->
                     <div class="card-title m-0">
-                        <h3 class="fw-bolder m-0">{{ $page_title }}</h3>
+                        <h3 class="fw-bolder m-0"><?php echo e($page_title); ?></h3>
                     </div>
                     <!--end::Card title-->
                 </div>
@@ -19,12 +18,12 @@
                 <!--begin::Content-->
                 <div id="" class="collapse show">
                     <!--begin::Form-->
-                    <form id="" class="form" method="POST" href="{{ route('admin.system.company.profile') }}" enctype="multipart/form-data">
-                        @csrf
+                    <form id="" class="form" method="POST" href="<?php echo e(route('admin.system.company.profile')); ?>" enctype="multipart/form-data">
+                        <?php echo csrf_field(); ?>
 
-                        @if(!empty(companyProfile()))
-                            <input type="hidden" name="id" value="{{ companyProfile()->id }}">
-                        @endif
+                        <?php if(!empty(companyProfile())): ?>
+                            <input type="hidden" name="id" value="<?php echo e(companyProfile()->id); ?>">
+                        <?php endif; ?>
                         <div class="card-body border-top p-9">
                             <!--begin::Input group-->
                             <div class="row mb-6">
@@ -35,22 +34,22 @@
                                 <!--begin::Col-->
                                 <div class="col-lg-8">
                                     <!--begin::Image input-->
-                                    @php
+                                    <?php
                                         $logo = asset('public/company/logos/default.png');
                                         $favicon = asset('public/company/logos/default.png');
-                                    @endphp
-                                    @if(!empty(companyProfile()) && companyProfile()->logo)
-                                        @php
+                                    ?>
+                                    <?php if(!empty(companyProfile()) && companyProfile()->logo): ?>
+                                        <?php
                                             $logo = asset('public/company/logos').'/'.companyProfile()->logo;
-                                        @endphp
-                                    @endif
+                                        ?>
+                                    <?php endif; ?>
 
-                                    @if(!empty(companyProfile()) && companyProfile()->favicon)
-                                        @php
+                                    <?php if(!empty(companyProfile()) && companyProfile()->favicon): ?>
+                                        <?php
                                             $favicon = asset('public/company/favicons').'/'.companyProfile()->favicon;
-                                        @endphp
-                                    @endif
-                                    <div class="image-input image-input-outline image-input-empty" data-kt-image-input="true" style="background-image: url({{ $logo }})">
+                                        ?>
+                                    <?php endif; ?>
+                                    <div class="image-input image-input-outline image-input-empty" data-kt-image-input="true" style="background-image: url(<?php echo e($logo); ?>)">
                                         <!--begin::Preview existing avatar-->
                                         <div class="image-input-wrapper w-125px h-125px" style="background-image: none;"></div>
                                         <!--end::Preview existing avatar-->
@@ -97,7 +96,7 @@
                                 <!--begin::Col-->
                                 <div class="col-lg-8">
                                     <!--begin::Image input-->
-                                    <div class="image-input image-input-outline image-input-empty" data-kt-image-input="true" style="background-image: url({{ $favicon }})">
+                                    <div class="image-input image-input-outline image-input-empty" data-kt-image-input="true" style="background-image: url(<?php echo e($favicon); ?>)">
                                         <!--begin::Preview existing avatar-->
                                         <div class="image-input-wrapper w-125px h-125px" style="background-image: none;"></div>
                                         <!--end::Preview existing avatar-->
@@ -143,7 +142,7 @@
 
                                 <!--begin::Col-->
                                 <div class="col-lg-8 fv-row">
-                                    <input type="text" name="company" value="@if(!empty(companyProfile())) {{ companyProfile()->company }} @endif" class="form-control form-control-lg form-control-solid" placeholder="Company name"/>
+                                    <input type="text" name="company" value="<?php if(!empty(companyProfile())): ?> <?php echo e(companyProfile()->company); ?> <?php endif; ?>" class="form-control form-control-lg form-control-solid" placeholder="Company name"/>
                                 </div>
                                 <!--end::Col-->
                             </div>
@@ -160,7 +159,7 @@
 
                                 <!--begin::Col-->
                                 <div class="col-lg-8 fv-row">
-                                    <input type="email" name="email" value="@if(!empty(companyProfile())) {{ companyProfile()->email }} @endif" class="form-control form-control-lg form-control-solid" placeholder="Company Email"/>
+                                    <input type="email" name="email" value="<?php if(!empty(companyProfile())): ?> <?php echo e(companyProfile()->email); ?> <?php endif; ?>" class="form-control form-control-lg form-control-solid" placeholder="Company Email"/>
                                 </div>
                                 <!--end::Col-->
                             </div>
@@ -178,7 +177,7 @@
 
                                 <!--begin::Col-->
                                 <div class="col-lg-8 fv-row">
-                                    <input type="tel" name="phone" value="@if(!empty(companyProfile())) {{ companyProfile()->phone }} @endif" class="form-control form-control-lg form-control-solid" placeholder="Phone number"/>
+                                    <input type="tel" name="phone" value="<?php if(!empty(companyProfile())): ?> <?php echo e(companyProfile()->phone); ?> <?php endif; ?>" class="form-control form-control-lg form-control-solid" placeholder="Phone number"/>
                                 </div>
                                 <!--end::Col-->
                             </div>
@@ -192,7 +191,7 @@
 
                                 <!--begin::Col-->
                                 <div class="col-lg-8 fv-row">
-                                    <input type="text" name="website" value="@if(!empty(companyProfile())) {{ companyProfile()->website }} @endif" class="form-control form-control-lg form-control-solid" placeholder="Company website"/>
+                                    <input type="text" name="website" value="<?php if(!empty(companyProfile())): ?> <?php echo e(companyProfile()->website); ?> <?php endif; ?>" class="form-control form-control-lg form-control-solid" placeholder="Company website"/>
                                 </div>
                                 <!--end::Col-->
                             </div>
@@ -210,7 +209,7 @@
 
                                 <!--begin::Col-->
                                 <div class="col-lg-8 fv-row">
-                                    <input type="text" name="country" value="@if(!empty(companyProfile())) {{ companyProfile()->country }} @endif" class="form-control form-control-lg form-control-solid" placeholder="Country"/>
+                                    <input type="text" name="country" value="<?php if(!empty(companyProfile())): ?> <?php echo e(companyProfile()->country); ?> <?php endif; ?>" class="form-control form-control-lg form-control-solid" placeholder="Country"/>
                                 </div>
                                 <!--end::Col-->
                             </div>
@@ -242,4 +241,6 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp\www\admin-default\resources\views/admin/system/company-profile.blade.php ENDPATH**/ ?>
