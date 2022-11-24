@@ -15,7 +15,7 @@
                     <h3 class="fw-bolder m-0">{{ $page_title }}</h3>
                 </div>
                 <div class="content-header-right mt-3">
-                    <a href="{{ route('general.computer.index') }}" title="All General.computers" class="btn btn-primary btn-sm">View All</a>
+                    <a href="{{ route('category.index') }}" title="All General.categories" class="btn btn-primary btn-sm">View All</a>
                 </div>
                 <!--end::Card title-->
             </div>
@@ -24,7 +24,7 @@
             <!--begin::Content-->
             <div id="" class="collapse show">
                 <!--begin::Form-->
-                <form action="{{ route("general.computer.update", $model->id) }}" id="regform" class="form-horizontal" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+                <form action="{{ route("category.update", $model->id) }}" id="regform" class="form-horizontal" enctype="multipart/form-data" method="post" accept-charset="utf-8">
                     @csrf
                     {{ method_field('PATCH') }}
 
@@ -32,10 +32,9 @@
                          <div class="row mb-6">
 <label for="name" class="col-lg-2 col-form-label required fw-bold fs-6">Name</label><div class="col-md-6 col-sm-6"><input type="text" class="form-control form-control-lg form-control-solid" name="name" value="{{ $model->name }}" placeholder="Enter name">
 <span style="color: red">{{ $errors->first("name") }}</span></div></div> <div class="row mb-6">
-<label for="description" class="col-lg-2 col-form-label required fw-bold fs-6">Description</label><div class="col-md-6 col-sm-6"><input type="text" class="form-control form-control-lg form-control-solid" name="description" value="{{ $model->description }}" placeholder="Enter description">
+<label for="description" class="col-lg-2 col-form-label required fw-bold fs-6">Description</label><div class="col-md-6 col-sm-6"><textarea class="ckeditor form-control form-control-lg form-control-solid" id="description" name="description">{{ $model->description }}</textarea>
 <span style="color: red">{{ $errors->first("description") }}</span></div></div> <div class="row mb-6">
-<label for="status" class="col-lg-2 col-form-label required fw-bold fs-6">Status</label><div class="col-md-6 col-sm-6"><select class="selectpicker" name="status"><option value="1" {{ $model->status==1?"selected":"" }}>Active</option><option value="0" {{ $model->status==0?"selected":"" }}>In Active</option></select><span style="color: red">{{ $errors->first("status") }}</span></div></div><label for="" class="col-form-label col-md-3 col-sm-3  label-align"></label>
-<div class="col-sm-6"><button type="submit" class="btn btn-success pull-left">Save</button></div>
+<label for="status" class="col-lg-2 col-form-label required fw-bold fs-6">Status</label><div class="col-md-6 col-sm-6"><select class="selectpicker" name="status"><option value="1" {{ $model->status==1?"selected":"" }}>Active</option><option value="0" {{ $model->status==0?"selected":"" }}>In Active</option></select><span style="color: red">{{ $errors->first("status") }}</span></div></div>
                     </div>
 
                     <!--begin::Actions-->

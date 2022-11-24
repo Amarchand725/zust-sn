@@ -83,12 +83,9 @@
                                             <th  title="Log ID">SNo#</th>
                                             <th  title="Location">Avatar</th>
                                             <th  title="Location">Role</th>
-                                            <th  title="Location">First Name</th>
-                                            <th  title="Location">Last Name</th>
-                                            <th  title="Location">Phone</th>
+                                            <th  title="Location">Full Name</th>
                                             <th  title="Location">Email</th>
                                             <th  title="Location">Status</th>
-                                            <th  title="Created At">Created At</th>
                                             <th  title="Action">Action</th>
                                         </tr>
                                     </thead>
@@ -111,15 +108,7 @@
                                                             @endforeach
                                                         </ul>
                                                     </td>
-                                                    <td>
-                                                        {{ isset($model->hasProfile)?$model->hasProfile->first_name:$model->name }}
-                                                    </td>
-                                                    <td>
-                                                        {{ isset($model->hasProfile)?$model->hasProfile->last_name:'N/A' }}
-                                                    </td>
-                                                    <td>
-                                                        {{ isset($model->hasProfile)?$model->hasProfile->phone:'N/A' }}
-                                                    </td>
+                                                    <td>{{ $model->name }}</td>
                                                     <td>
                                                         {{ $model->email }}
                                                     </td>
@@ -130,9 +119,9 @@
                                                             <span class="badge badge-danger">In-Active</span>
                                                         @endif
                                                     </td>
-                                                    <td>{{  date('d, M-Y', strtotime($model->created_at)) }}</td>
                                                     <td>
                                                         <a href="{{route('admin.user.create-spacial-permission', $model->id)}}" data-toggle="tooltip" data-placement="top" title="Assign Spacial Permissions" class="btn btn-warning btn-sm"><i class="fa fa-lock"></i></a>
+                                                        <a href="{{route('user.show', $model->id)}}" data-toggle="tooltip" data-placement="top" title="Show Details" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>
                                                         @can('user-edit')
                                                             <a href="{{route('user.edit', $model->id)}}" data-toggle="tooltip" data-placement="top" title="Edit user" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
                                                         @endcan

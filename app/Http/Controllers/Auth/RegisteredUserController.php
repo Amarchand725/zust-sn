@@ -201,6 +201,12 @@ class RegisteredUserController extends Controller
         return redirect()->route('user.index')
                         ->with('message','User updated successfully');
     }
+    public function show($id)
+    {
+        $page_title = 'User Details';
+        $model = User::findOrFail($id);
+        return view('admin.user.show', compact('page_title','model'));
+    }
     public function destroy($id)
     {
         $this->authorize('user-delete');

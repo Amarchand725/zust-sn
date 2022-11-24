@@ -34,8 +34,7 @@
             <div  data-kt-menu-trigger="click"  class="menu-item menu-accordion" >
                 <!--begin:Menu link-->
                 <span class="menu-link" >
-                    <span  class="menu-icon" >
-                        <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen025.svg-->
+                    <span  class="menu-icon">
                         <span class="svg-icon svg-icon-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                 <rect x="2" y="2" width="9" height="9" rx="2" fill="currentColor"/>
@@ -177,32 +176,6 @@
                         <!--end:Menu link-->
                     </div>
                     <!--end:Menu item-->
-                    @foreach (menus() as $menu)
-                        @if(Auth::user()->hasRole('admin') || $menu->menu_of=='general')
-                            <!--begin:Menu link-->
-                            @php $_menu = $menu->menu @endphp
-                            @can($_menu.'-list')
-                            <a class="menu-link {{ request()->is('admin/logActivity') ? 'active' : '' }}" href="{{ route('admin.logActivity') }}" title="System Log" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-                                <span  class="menu-bullet" >
-                                    <span class="fa fa-tasks"></span>
-                                </span>
-                                <span  class="menu-title" >All {{ Str::plural($menu->menu) }}</span>
-                            </a>
-                            @endcan
-                            <!--end:Menu link-->
-                        @elseif(Auth::user()->hasRole($menu->menu_of) || $menu->menu_of=='general')
-                            <!--begin:Menu link-->
-                            @can($_menu.'-list')
-                            <a class="menu-link {{ request()->is('admin/logActivity') ? 'active' : '' }}" href="{{ route('admin.logActivity') }}" title="System Log" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-                                <span  class="menu-bullet" >
-                                    <span class="fa fa-tasks"></span>
-                                </span>
-                                <span  class="menu-title" >System Log</span>
-                            </a>
-                            @endcan
-                            <!--end:Menu link-->
-                        @endif
-                    @endforeach
                 </div>
                 <!--end:Menu sub-->
             </div>
@@ -212,11 +185,10 @@
             @foreach (menus() as $menu)
                 @if(Auth::user()->hasRole('Admin') || $menu->menu_of=='general')
                     @can($menu->menu.'-list')
-                        <div  data-kt-menu-trigger="click"  class="menu-item menu-accordion" >
+                        <div data-kt-menu-trigger="click"  class="menu-item menu-accordion" >
                             <!--begin:Menu link-->
                             <span class="menu-link" >
                                 <span  class="menu-icon" >
-                                    <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen025.svg-->
                                     <span class="svg-icon svg-icon-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                             <rect x="2" y="2" width="9" height="9" rx="2" fill="currentColor"/>
@@ -232,13 +204,13 @@
                             </span>
                             <!--end:Menu link--><!--begin:Menu sub-->
                             <div  class="menu-sub menu-sub-accordion menu-active-bg {{
-                                                    request()->is('admin/'.$menu->menu) ||
-                                                    request()->is('admin/'.$menu->menu.'/*')
+                                                   request()->is('"'.$menu->url.'"') ||
+                                                    request()->is('"'.$menu->url.'/*"')
                                                     ? 'show' : '' }}" >
                                 <!--begin:Menu item-->
                                 <div  class="menu-item" >
                                     <!--begin:Menu link-->
-                                    <a class="menu-link {{ request()->is('admin/'.$menu->menu) ? 'active' : '' }}" href="{{ route($menu->menu.'.index') }}" title="{{ $menu->lablel }}" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                                    <a class="menu-link {{ request()->is("'".$menu->url."'") ? 'active' : '' }}" href="{{ route($menu->menu.'.index') }}" title="{{ $menu->lablel }}" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
                                         <span  class="menu-bullet" >{!! $menu->icon !!}</span>
                                         <span class="menu-title" > {{ $menu->label }}</span>
                                     </a>
@@ -249,7 +221,7 @@
                                 <!--begin:Menu item-->
                                 <div  class="menu-item" >
                                     <!--begin:Menu link-->
-                                    <a class="menu-link {{ request()->is('admin/'.$menu->menu.'/create') ? 'active' : '' }}" href="{{ route($menu->menu.'.create') }}" title="{{ $menu->lablel }}" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                                    <a class="menu-link {{ request()->is("'".$menu->url."/create'") ? 'active' : '' }}" href="{{ route($menu->menu.'.create') }}" title="{{ $menu->lablel }}" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
                                         <span  class="menu-bullet" >{!! $menu->icon !!}</span>
                                         <span class="menu-title" > Add New {{ Str::ucfirst($menu->menu) }}</span>
                                     </a>
@@ -282,8 +254,8 @@
                             </span>
                             <!--end:Menu link--><!--begin:Menu sub-->
                             <div  class="menu-sub menu-sub-accordion menu-active-bg {{
-                                                    request()->is($menu->url) ||
-                                                    request()->is($menu->url.'/*')
+                                                    request()->is('"'.$menu->url.'"') ||
+                                                    request()->is('"'.$menu->url.'/*"')
                                                     ? 'show' : '' }}" >
                                 <!--begin:Menu item-->
                                 <div  class="menu-item" >

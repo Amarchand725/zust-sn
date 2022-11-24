@@ -6,7 +6,12 @@
         <td>{{  $per[1] }}</td>
         <td>{{  date('d, M-Y', strtotime($model->created_at)) }}</td>
         <td>
-            <a href="{{route('admin.permission.restore', $model->id)}}" data-toggle="tooltip" data-placement="top" title="Restore" class="btn btn-primary btn-sm"><i class="fa fa-refresh"></i> Restore</a>
+            @can('permission-edit')
+                <a href="{{route('permission.edit', $model->id)}}" data-toggle="tooltip" data-placement="top" title="Edit permission" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Edit</a>
+            @endcan
+            @can('permission-delete')
+                <button class="btn btn-danger btn-sm delete" data-slug="{{ $model->id }}" data-del-url="{{ route('permission.destroy', $model->id) }}"><i class="fa fa-trash"></i> Delete</button>
+            @endcan
         </td>
     </tr>
 @endforeach

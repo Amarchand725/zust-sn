@@ -203,14 +203,26 @@ class MenuController extends Controller
 
         try{
             if($model){
-                //delete menu
-
                 //delete resource route from web
                 $controller_name = str_replace(' ', '', ucwords($model->menu)) ;
-                $menu_of = Str::lower($request->menu_of);
+                $menu_of = Str::lower($model->menu_of);
                 $controller_name = 'App\Http\Controllers'.'\\'.$menu_of.'\\'.$controller_name;
-                $replace_line = "Route::resource('". $request->menu."', '". $controller_name ."Controller');";
+                $replace_line = "Route::resource('". $model->url."', '". $controller_name ."Controller');";
 
+                $route_file = base_path().'/routes/web.php';
+                $contents = file_get_contents($route_file);
+                $contents = str_replace($replace_line, '', $contents);
+                file_put_contents($route_file, $contents);
+
+                //delete trash records route
+                $replace_line = "Route::get('". $model->menu."/trash/records', '". $controller_name ."Controller@trashRecords')->name('".$menu_of.".".$model->menu.".trash.records');";
+                $route_file = base_path().'/routes/web.php';
+                $contents = file_get_contents($route_file);
+                $contents = str_replace($replace_line, '', $contents);
+                file_put_contents($route_file, $contents);
+
+                //delete restore trash record route
+                $replace_line = "Route::get('". $model->menu."/restore/{id}', '". $controller_name ."Controller@restore')->name('".$menu_of.".".$model->menu.".restore');";
                 $route_file = base_path().'/routes/web.php';
                 $contents = file_get_contents($route_file);
                 $contents = str_replace($replace_line, ' ', $contents);
@@ -229,7 +241,7 @@ class MenuController extends Controller
                 //delete views with all files
                 $modelName = str_replace(' ', '', ucwords($model->menu)) ;
                 $viewFolderName = Str::plural(str::lower($modelName));
-                $viewFolderPath = 'resources/views/'.$viewFolderName;
+                $viewFolderPath = 'resources/views/'.$model->menu_of.'/'.$viewFolderName;
                 if (\File::exists($viewFolderPath)){
                     \File::deleteDirectory($viewFolderPath);
                 }
@@ -244,8 +256,9 @@ class MenuController extends Controller
 
                 //delete controller
                 $modelName = str_replace(' ', '', ucwords($model->menu)) ;
-                $ControllerName = Str::lower($model->menu_of).'\\'.$modelName  ."Controller.php";
-                $controllerPath = base_path('app/Http/Controllers/').$ControllerName;
+                $menu_of = str_replace(' ', '', ucwords($model->menu_of));
+                $ControllerName = $modelName  ."Controller.php";
+                $controllerPath = base_path('app/Http/Controllers/').$menu_of.'/'.$ControllerName;
                 if(file_exists($controllerPath)){
                     unlink($controllerPath);
                 }
@@ -258,7 +271,6 @@ class MenuController extends Controller
                     File::deleteDirectory($folder_path);
                 }
 
-                //delete schema from database
                 Schema::drop($table_name);
 
                 //re-create menu
@@ -298,9 +310,11 @@ class MenuController extends Controller
     public function destroy($id)
     {
         /* $model = Menu::where('id', $id)->delete();
+        $onlySoftDeleted = Menu::onlyTrashed()->count();
         if($model){
             return response()->json([
                 'status' => true,
+                'trash_records' => $onlySoftDeleted
             ]);
         } */
 
@@ -315,7 +329,21 @@ class MenuController extends Controller
 
             $route_file = base_path().'/routes/web.php';
             $contents = file_get_contents($route_file);
-            $contents = str_replace($replace_line, ' ', $contents);
+            $contents = str_replace($replace_line, '', $contents);
+            file_put_contents($route_file, $contents);
+
+            //delete trash records route
+            $replace_line = "Route::get('". $model->menu."/trash/records', '". $controller_name ."Controller@trashRecords')->name('".$menu_of.".".$model->menu.".trash.records');";
+            $route_file = base_path().'/routes/web.php';
+            $contents = file_get_contents($route_file);
+            $contents = str_replace($replace_line, '', $contents);
+            file_put_contents($route_file, $contents);
+
+            //delete restore trash record route
+            $replace_line = "Route::get('". $model->menu."/restore/{id}', '". $controller_name ."Controller@restore')->name('".$menu_of.".".$model->menu.".restore');";
+            $route_file = base_path().'/routes/web.php';
+            $contents = file_get_contents($route_file);
+            $contents = str_replace($replace_line, '', $contents);
             file_put_contents($route_file, $contents);
 
             //delete migration file
@@ -365,9 +393,11 @@ class MenuController extends Controller
 
             $model->delete();
 
+            $onlySoftDeleted = Menu::onlyTrashed()->count();
             if($model){
                 return response()->json([
                     'status' => true,
+                    'trash_records' => $onlySoftDeleted
                 ]);
             }
         }
@@ -464,7 +494,7 @@ class MenuController extends Controller
 
         $search_columns  = '';
         $boolean = true;
-        $upload = false;
+        $upload_fields = [];
 		foreach ($columns as $key=>$value) {
             if ($value->Field != 'id' && $value->Field != 'deleted_at' && $value->Field != 'created_at' && $value->Field != 'updated_at' && $value->Field != 'status') {
                 $type = explode('(', $value->Type);
@@ -476,18 +506,24 @@ class MenuController extends Controller
                     $search_columns .=  '$query->orWhere("'.$value->Field.'", "like", "%". $request["search"] ."%");';
                 }
                 if($type[0]=='binary' || $type[0]=='varbinary' || $type[0]=='blob'){
-                    $upload = $value->Field;
+                    $upload_fields[] = $value->Field;
                 }
             }
 		}
 
         $upload_file = "";
-        if($upload){
-            $upload_file  .= 'if (isset($request->'.$upload.')) {'.
-                                '$'.$upload.' = date("d-m-Y-His").".".$request->file("'.$upload.'")->getClientOriginalExtension();'.
-                                '$request->'.$upload.'->move(public_path("/admin/images/'.$table_name.'"), $'.$upload.');'.
-                                '$input["'.$upload.'"]'.' = $'.$upload.';'.
-                            '}';
+        $update_validation_fields = '';
+        if(count($upload_fields)){
+            foreach ($upload_fields as $upload) {
+                $upload_file  .= 'if (isset($request->'.$upload.')) {'.
+                                    '$'.$upload.' = Str::random(5).date("d-m-Y-His").".".$request->file("'.$upload.'")->getClientOriginalExtension();'.
+                                    '$request->'.$upload.'->move(public_path("/admin/images/'.$table_name.'"), $'.$upload.');'.
+                                    '$input["'.$upload.'"]'.' = $'.$upload.';'.
+                                '}';
+                $update_validation_fields .= 'if($model->'.$upload.'){'.
+                                                'unset($validation["'.$upload.'"]);'.
+                                            '}';
+            }
         }
         $authorize_menu = $data->menu;
     	$str1 = str_replace('{modelName}', $modelName, $controllerFile);
@@ -498,6 +534,8 @@ class MenuController extends Controller
     	$str1 = str_replace('{ControllerName}', $ControllerName, $str1);
     	$str1 = str_replace('{searchColumns}', $search_columns, $str1);
     	$str1 = str_replace('{upload}', $upload_file, $str1);
+    	$str1 = str_replace('{table_name}', $table_name, $str1);
+    	$str1 = str_replace('{update_validation}', $update_validation_fields, $str1);
 
 		$ext = ".php";
 		$str1  = "<?php \n". $str1;
@@ -624,24 +662,23 @@ class MenuController extends Controller
                         }elseif($type[0]=='int' || $type[0]=='bigint' || $type[0]=='decimal' || $type[0]=='float' || $type[0]=='double'){
                             $form .= '<input type="number" class="form-control form-control-lg form-control-solid" name="'.$value->Field.'" value="{{ old("'.$value->Field.'") }}" placeholder="Enter '.$value->Field.'">'."\n";
                         }elseif($type[0]=='binary' || $type[0]=='varbinary' || $type[0]=='blob'){
-                            $default = 'public/company/logos/default.png';
-                            $form .='<div class="image-input image-input-outline image-input-empty" data-kt-image-input="true" style="background-image: url({{ $default }})">'+
-                                        '<div class="image-input-wrapper w-125px h-125px" style="background-image: none;"></div>'+
+                            $form .= '@php $default = asset("public/default.png"); @endphp';
+                            $form .='<div class="image-input image-input-outline image-input-empty" data-kt-image-input="true" style="background-image: url({{ $default }})">'.
+                                        '<div class="image-input-wrapper w-125px h-125px" style="background-image: none;"></div>'.
 
-                                        '<label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Logo">'+
-                                            '<i class="bi bi-pencil-fill fs-7"></i>'+
+                                        '<label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Logo">'.
+                                            '<i class="bi bi-pencil-fill fs-7"></i>'.
 
-                                            '<input type="file" name="'.$value->Field.'" accept=".png, .jpg, .jpeg"/>'+
-                                            '<input type="hidden"name="'.$value->Field.'_remove"/>'+
-                                        '</label>'+
+                                            '<input type="file" name="'.$value->Field.'" accept=".png, .jpg, .jpeg"/>'.
+                                        '</label>'.
 
-                                        '<span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Logo">'+
-                                            '<i class="bi bi-x fs-2"></i>'+
-                                        '</span>'+
+                                        '<span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Logo">'.
+                                            '<i class="bi bi-x fs-2"></i>'.
+                                        '</span>'.
 
-                                        '<span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove Logo">'+
-                                            '<i class="bi bi-x fs-2"></i>'+
-                                        '</span>'+
+                                        '<span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove Logo">'.
+                                            '<i class="bi bi-x fs-2"></i>'.
+                                        '</span>'.
                                     '</div>';
                             $file_path = public_path('admin/images/'.$table_name);
                             if(!File::isDirectory($file_path)){
@@ -670,27 +707,26 @@ class MenuController extends Controller
                         }elseif($type[0]=='varchar'){
                             $edit_form .= '<input type="text" class="form-control form-control-lg form-control-solid" name="'.$value->Field.'" value="{{ $model->'.$value->Field.' }}" placeholder="Enter '.$value->Field.'">'."\n";
                         }elseif($type[0]=='binary' || $type[0]=='varbinary' || $type[0]=='blob'){
-                            $default = asset('public/company/logos/default.png');
-                            if ('$model->'.$value->Field) {
-                                $default = asset('public/admin/images').'/'.$table_name.'/'.$value->Field;
-                            }
-                            $edit_form .='<div class="image-input image-input-outline image-input-empty" data-kt-image-input="true" style="background-image: url({{ $default }})">'+
-                                        '<div class="image-input-wrapper w-125px h-125px" style="background-image: none;"></div>'+
+                            $edit_form .= '@php $default = asset("public/default.png"); @endphp '.
+                                            '@if ($model->'.$value->Field.')'.
+                                                ' @php $default = asset("public/admin/images/'.$table_name.'")."/".$model->'.$value->Field.'; @endphp '.
+                                            '@endif ';
+                            $edit_form .='<div class="image-input image-input-outline image-input-empty" data-kt-image-input="true" style="background-image: url({{ $default }})">'.
+                                        '<div class="image-input-wrapper w-125px h-125px" style="background-image: none;"></div>'.
 
-                                        '<label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Logo">'+
-                                            '<i class="bi bi-pencil-fill fs-7"></i>'+
+                                        '<label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Logo">'.
+                                            '<i class="bi bi-pencil-fill fs-7"></i>'.
 
-                                            '<input type="file" name="'.$value->Field.'" accept=".png, .jpg, .jpeg"/>'+
-                                            '<input type="hidden"name="'.$value->Field.'_remove"/>'+
-                                        '</label>'+
+                                            '<input type="file" name="'.$value->Field.'" accept=".png, .jpg, .jpeg"/>'.
+                                        '</label>'.
 
-                                        '<span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Logo">'+
-                                            '<i class="bi bi-x fs-2"></i>'+
-                                        '</span>'+
+                                        '<span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Logo">'.
+                                            '<i class="bi bi-x fs-2"></i>'.
+                                        '</span>'.
 
-                                        '<span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove Logo">'+
-                                            '<i class="bi bi-x fs-2"></i>'+
-                                        '</span>'+
+                                        '<span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove Logo">'.
+                                            '<i class="bi bi-x fs-2"></i>'.
+                                        '</span>'.
                                     '</div>';
                             $file_path = public_path('admin/images/'.$table_name);
                         }elseif($type[0]=='int' || $type[0]=='bigint' || $type[0]=='decimal' || $type[0]=='float' || $type[0]=='double'){
@@ -759,6 +795,7 @@ class MenuController extends Controller
                 }elseif($type[0]=='text'){
                     $index_page .= '<td>{!! Str::limit($model->'.$value->Field.', 20) !!}</td>';
                     $trash_index_page .= '<td>{!! Str::limit($model->'.$value->Field.', 20) !!}</td>';
+                    $show_form .= '<tr><th>'.ucfirst($value->Field).'</th><td>{!! $model->'.$value->Field.' !!}</td></tr>';
                 }else{
                     $index_page .= '<td>{!! $model->'.$value->Field.' !!}</td>';
                     $trash_index_page .= '<td>{!! $model->'.$value->Field.' !!}</td>';
@@ -768,9 +805,9 @@ class MenuController extends Controller
 		}
 
         $index_page .= '<td width="250px">'.
-                    '<a href="{{ route("'.$data->route_url.'.show", $model->id) }}" data-toggle="tooltip" data-placement="top" title="Show '.Str::ucfirst($modelName).'" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>'.
-                    '<a href="{{ route("'.$data->route_url.'.edit", $model->id) }}" data-toggle="tooltip" data-placement="top" title="Edit '.Str::ucfirst($modelName).'" class="btn btn-primary btn-sm" style="margin-left: 3px;"><i class="fa fa-edit"></i></a>'.
-                    '<button data-toggle="tooltip" data-placement="top" title="Delete '.Str::ucfirst($modelName).'" class="btn btn-danger btn-sm delete" data-slug="{{ $model->id }}" data-del-url="{{ route("'.$data->route_url.'.destroy", $model->id) }}" style="margin-left: 3px;"><i class="fa fa-trash"></i></button>'.
+                    '<a href="{{ route("'.$route_menu.'.show", $model->id) }}" data-toggle="tooltip" data-placement="top" title="Show '.Str::ucfirst($modelName).'" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>'.
+                    '<a href="{{ route("'.$route_menu.'.edit", $model->id) }}" data-toggle="tooltip" data-placement="top" title="Edit '.Str::ucfirst($modelName).'" class="btn btn-primary btn-sm" style="margin-left: 3px;"><i class="fa fa-edit"></i></a>'.
+                    '<button data-toggle="tooltip" data-placement="top" title="Delete '.Str::ucfirst($modelName).'" class="btn btn-danger btn-sm delete" data-slug="{{ $model->id }}" data-del-url="{{ route("'.$route_menu.'.destroy", $model->id) }}" style="margin-left: 3px;"><i class="fa fa-trash"></i></button>'.
                 '</td>';
 
         $trash_index_page .= '<td width="250px">'.
@@ -778,37 +815,37 @@ class MenuController extends Controller
             '</td>';
 
 		$createForm = $form;
-        $createForm .= '<label for="" class="col-form-label col-md-3 col-sm-3  label-align"></label>'."\n".
+        /* $createForm .= '<label for="" class="col-form-label col-md-3 col-sm-3  label-align"></label>'."\n".
                         '<div class="col-sm-6">'.
                             '<button type="submit" class="btn btn-success pull-left">Save</button>'.
-                        '</div>';
+                        '</div>'; */
 
         $menu_plural = ucfirst(str::plural($data->route_url));
 		$createForm = str_replace('{createForm}', $createForm, $createFile);
-		$createForm = str_replace('{store_route}', '{{ route("'.$data->route_url.'.store") }}', $createForm);
-		$createForm = str_replace('{view_all_route}', '{{ route("'.$data->route_url.'.index") }}', $createForm);
+		$createForm = str_replace('{store_route}', '{{ route("'.$route_menu.'.store") }}', $createForm);
+		$createForm = str_replace('{view_all_route}', '{{ route("'.$route_menu.'.index") }}', $createForm);
 		$createForm = str_replace('{page_title}', 'Add New '.$create_page_title, $createForm);
-		$createForm = str_replace('{index_route}', $data->route_url, $createForm);
+		$createForm = str_replace('{index_route}', $route_menu, $createForm);
 		$createForm = str_replace('{menu_plural}', $menu_plural, $createForm);
 
 		$updateForm = $edit_form;
-        $updateForm .= '<label for="" class="col-form-label col-md-3 col-sm-3  label-align"></label>'."\n".
+        /* $updateForm .= '<label for="" class="col-form-label col-md-3 col-sm-3  label-align"></label>'."\n".
                         '<div class="col-sm-6">'.
                             '<button type="submit" class="btn btn-success pull-left">Save</button>'.
-                        '</div>';
+                        '</div>'; */
 		$updateForm = str_replace('{createForm}', $updateForm, $editFile);
-        $updateForm = str_replace('{store_route}', '{{ route("'.$data->route_url.'.update", $model->id) }}', $updateForm);
-		$updateForm = str_replace('{view_all_route}', '{{ route("'.$data->route_url.'.index") }}', $updateForm);
+        $updateForm = str_replace('{store_route}', '{{ route("'.$route_menu.'.update", $model->id) }}', $updateForm);
+		$updateForm = str_replace('{view_all_route}', '{{ route("'.$route_menu.'.index") }}', $updateForm);
         $updateForm = str_replace('{page_title}', 'Edit '.$create_page_title, $updateForm);
-        $updateForm = str_replace('{index_route}', $data->route_url, $updateForm);
+        $updateForm = str_replace('{index_route}', $route_menu, $updateForm);
         $updateForm = str_replace('{menu_plural}', $menu_plural, $updateForm);
 
 		$searchForm = str_replace('{index}', $index_page, $searchFile);
 		$searchForm = str_replace('{totalColumns}', $total_columns, $searchForm);
 
 		$index = str_replace('{create_create_title}', 'Add New '.$create_page_title, $indexFile);
-		$index = str_replace('{create_route}', $data->route_url, $index);
-		$index = str_replace('{index_route}', $data->route_url, $index);
+		$index = str_replace('{create_route}', $route_menu, $index);
+		$index = str_replace('{index_route}', $route_menu, $index);
 		$index = str_replace('{tcolumns}', $t_columns, $index);
 		$index = str_replace('{index}', $index_page, $index);
 		$index = str_replace('{totalColumns}', $total_columns, $index);
@@ -824,9 +861,9 @@ class MenuController extends Controller
         $trash_search = str_replace('{index}', $index_page , $trash_search_file);
 
 		$show = str_replace('{show_form}', $show_form, $showFile);
-        $show = str_replace('{view_all_route}', '{{ route("'.$data->route_url.'.index") }}', $show);
+        $show = str_replace('{view_all_route}', '{{ route("'.$route_menu.'.index") }}', $show);
         $show = str_replace('{page_title}', 'Show '.$create_page_title, $show);
-        $show = str_replace('{index_route}', $data->route_url, $show);
+        $show = str_replace('{index_route}', $route_menu, $show);
         $show = str_replace('{menu_plural}', $menu_plural, $show);
 
 		$files = array();
@@ -850,5 +887,36 @@ class MenuController extends Controller
 		$txt = $content;
 		fwrite($myfile, $txt);
 		fclose($myfile);
+    }
+
+    public function trashRecords(Request $request)
+    {
+        $page_title = 'All Trashed Records';
+        $per_page_records = 10;
+        if(!empty(systemSetting())){
+            $per_page_records = systemSetting()->per_page_record;
+        }
+        if($request->ajax()){
+            $query = Menu::where('id', '>', 0);
+            if($request['search'] != ""){
+                $query->where('menu', 'like', '%'. $request['search'] .'%');
+                $query->orWhere('label', 'like', '%'. $request['search'] .'%');
+                $query->orWhere('status', 'like', '%'. $request['search'] .'%');
+                $query->orWhere('parent_id', 'like', '%'. $request['search'] .'%');
+                $query->orWhere('menu_of', 'like', '%'. $request['search'] .'%');
+            }
+            if($request['status']!="All"){
+                $query->where('menu_of', $request['status']);
+            }
+            $models = $query->where('deleted_at', '!=', NULL)->paginate($per_page_records);
+            return (string) view('admin.menus.trash-search', compact('models'));
+        }
+        $models = Menu::onlyTrashed()->paginate($per_page_records);
+        return view('admin.menus.trash-index', compact('models', 'page_title'));
+    }
+    public function restore($id)
+    {
+        Menu::onlyTrashed()->where('id', $id)->restore();
+        return redirect()->back()->with('message', 'Record Restored Successfully.');
     }
 }

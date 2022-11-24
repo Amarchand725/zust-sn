@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 @section('title', $page_title)
 @section('content')
-<input type="hidden" id="page_url" value="{{ route('general.computer.index') }}">
+<input type="hidden" id="page_url" value="{{ route('general.category.trash.records') }}">
 <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -35,18 +35,6 @@
                             <!--end::Breadcrumb-->
                         </div>
                         <!--end::Page title-->
-
-                        <!--begin::Actions-->
-                        <div class="d-flex align-items-center gap-2 gap-lg-3">
-                            <!--begin::Primary button-->
-                            @can('general.computer-create')
-                                <a href="{{ route('general.computer.create') }}" class="btn btn-sm fw-bold btn-primary">Add New Computer</a>
-                            @endcan
-                            <a href="{{ route('general.computer.trash.records') }}" title="{{ $page_title }} Trash Records" class="btn btn-sm fw-bold btn-primary">Restore</a>
-                            <span id="trash-record-count">{{ count($onlySoftDeleted) }}</span> Records Deleted
-                            <!--end::Primary button-->
-                        </div>
-                        <!--end::Actions-->
                     </div>
                     <!--end::Toolbar container-->
                 </div>
@@ -85,11 +73,11 @@
                                         @foreach($models as $key=>$model)
                                             <tr id="id-{{ $model->id }}">
                                                 <td>{{  $models->firstItem()+$key }}.</td>
-                                                <td>{!! $model->name !!}</td><td>{!! $model->description !!}</td><td>@if($model->status)<span class="badge badge-success">Active</span>@else<span class="badge badge-danger">In-Active</span>@endif</td><td width="250px"><a href="{{ route("general.computer.show", $model->id) }}" data-toggle="tooltip" data-placement="top" title="Show Computer" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a><a href="{{ route("general.computer.edit", $model->id) }}" data-toggle="tooltip" data-placement="top" title="Edit Computer" class="btn btn-primary btn-sm" style="margin-left: 3px;"><i class="fa fa-edit"></i></a><button data-toggle="tooltip" data-placement="top" title="Delete Computer" class="btn btn-danger btn-sm delete" data-slug="{{ $model->id }}" data-del-url="{{ route("general.computer.destroy", $model->id) }}" style="margin-left: 3px;"><i class="fa fa-trash"></i></button></td>
+                                                <td>{!! $model->name !!}</td><td>{!! Str::limit($model->description, 20) !!}</td><td>@if($model->status)<span class="badge badge-success">Active</span>@else<span class="badge badge-danger">In-Active</span>@endif</td><td width="250px"><a href="{{ route("general.category.restore", $model->id) }}" data-toggle="tooltip" data-placement="top" title="Restore Category" class="btn btn-primary btn-sm"><i class="fa fa-refresh"></i> Restore</a></td>
                                             </tr>
                                         @endforeach
                                         <tr>
-                                            <td colspan="7">
+                                            <td colspan="{totalColumns}">
                                                 Displying {{$models->firstItem()}} to {{$models->lastItem()}} of {{$models->total()}} records
                                                 <div class="d-flex justify-content-center">
                                                     {!! $models->links('pagination::bootstrap-4') !!}

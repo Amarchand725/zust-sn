@@ -168,6 +168,12 @@ class SystemController extends Controller
         $models = \LogActivity::logActivityLists($per_page_records);
         return view('admin.logActivity.index',compact('models','page_title', 'onlySoftDeleted'));
     }
+    public function showLogActivity($id)
+    {
+        $page_title = "Log Activity Details";
+        $model = LogActivity::findOrFail($id);
+        return view('admin.logActivity.show', compact('page_title', 'model'));
+    }
     public function deleteLogActivity($id)
     {
         $this->authorize('logactivity-delete');

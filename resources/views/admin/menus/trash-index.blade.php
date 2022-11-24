@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 @section('title', $page_title)
 @section('content')
-<input type="hidden" id="page_url" value="{{ route('permission.index') }}">
+<input type="hidden" id="page_url" value="{{ route('admin.menu.trash.records') }}">
 <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -39,7 +39,6 @@
                     <!--end::Toolbar container-->
                 </div>
                 <!--end::Toolbar-->
-
                 <!--begin::Content-->
                 <div id="kt_app_content" class="app-content" >
                     <!--begin::Content container-->
@@ -64,28 +63,39 @@
                                 <table  class="table align-middle table-row-dashed fs-6 gy-5" id="audit-log-table">
                                     <thead>
                                         <tr>
-                                            <th  title="Log ID">SNo#</th>
-                                            <th  title="Location">Name</th>
-                                            <th  title="Description">Permission</th>
-                                            <th  title="Created At">Created At</th>
-                                            <th  title="Action">Action</th>
+                                            <th>SL</th>
+                                            <th>Menu of</th>
+                                            <th>Icon</th>
+                                            <th>Label</th>
+                                            <th>Parent</th>
+                                            <th>Menu</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="body">
-                                        @foreach ($models as $key=>$model)
-                                            <tr id="id-{{ $model->id }}">
+                                        @foreach($models as $key=>$menu)
+                                            <tr id="id-{{ $menu->id }}" class="id-{{ $menu->id }}">
                                                 <td>{{  $models->firstItem()+$key }}.</td>
-                                                @php $per = explode('-', $model->name) @endphp
-                                                <td>{{  $per[0] }}</td>
-                                                <td>{{  $per[1] }}</td>
-                                                <td>{{  date('d, M-Y', strtotime($model->created_at)) }}</td>
+                                                <td>{{ Str::ucfirst($menu->menu_of) }}</td>
+                                                <td>{!! $menu->icon !!}</td>
+                                                <td>{{ Str::ucfirst($menu->label) }}</td>
+                                                <td>{{ isset($menu->hasParent)?$menu->hasParent->menu:'--' }}</td>
+                                                <td>{{$menu->menu}}</td>
                                                 <td>
-                                                    <a href="{{route('admin.permission.restore', $model->id)}}" data-toggle="tooltip" data-placement="top" title="Restore" class="btn btn-primary btn-sm"><i class="fa fa-refresh"></i> Restore</a>
+                                                    @if($menu->status)
+                                                        <span class="badge badge-success">Active</span>
+                                                    @else
+                                                        <span class="badge badge-danger">In-Active</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <a href="{{route('admin.menu.restore', $menu->id)}}" data-toggle="tooltip" data-placement="top" title="Restore Record" class="btn btn-primary btn-sm"><i class="fa fa-refresh"></i> Restore</a>
                                                 </td>
                                             </tr>
                                         @endforeach
                                         <tr>
-                                            <td colspan="6">
+                                            <td colspan="8">
                                                 Displying {{$models->firstItem()}} to {{$models->lastItem()}} of {{$models->total()}} records
                                                 <div class="d-flex justify-content-center">
                                                     {!! $models->links('pagination::bootstrap-4') !!}

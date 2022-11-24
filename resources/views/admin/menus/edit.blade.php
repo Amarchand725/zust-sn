@@ -36,6 +36,7 @@
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
                                 <select name="menu_of" class="selectpicker" data-live-search="true">
+                                    <option value="general" {{ $menu->menu_of=='general'?'selected':'' }}>General</option>
                                     @foreach ($roles as $role)
                                     <option value="{{ Str::lower($role->name) }}" {{ $menu->menu_of==Str::lower($role->name)?'selected':'' }}>{{ $role->name }}</option>
                                     @endforeach
@@ -151,7 +152,7 @@
                                                     <option value="binary">BLOB (Image or other attachments)</option>
                                                 </select>
                                             </td>
-                                            <td>
+                                            <td style="width:130px">
                                                 <select name="default_types[]" id="" class="form-control default_selection js-example-basic-single">
                                                     <option value="none" selected>None</option>
                                                     <option value="nullable">Null</option>

@@ -49,7 +49,7 @@
                         </div>
                         <!--end::Input group-->
                         <!--begin::Input group-->
-                        <div class="row mb-6">
+                        {{-- <div class="row mb-6">
                             <!--begin::Label-->
                             <label class="col-lg-2 col-form-label fw-bold fs-6">Parent Menu</label>
                             <!--end::Label-->
@@ -66,7 +66,7 @@
                                 <span style="color: red">{{ $errors->first('parent_id') }}</span>
                             </div>
                             <!--end::Col-->
-                        </div>
+                        </div> --}}
                         <!--end::Input group-->
                         <!--begin::Input group-->
                         <div class="row mb-6">
@@ -153,7 +153,7 @@
                                                     <option value="binary">BLOB (Image or other attachments)</option>
                                                 </select>
                                             </td>
-                                            <td>
+                                            <td style="width:130px">
                                                 <select name="default_types[]" id="" class="form-control default_selection js-example-basic-single">
                                                     <option value="none" selected>None</option>
                                                     <option value="nullable">Null</option>
@@ -181,7 +181,7 @@
                         <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">
                             <!--begin::Indicator-->
                             <span class="indicator-label">
-                                Save Changes
+                                Save
                             </span>
                             <span class="indicator-progress">
                                 Please wait...

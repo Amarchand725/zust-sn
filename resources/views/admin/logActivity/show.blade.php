@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 @section('title', $page_title)
 @section('content')
-<input type="hidden" id="page_url" value="{{ route('general.computer.index') }}">
+<input type="hidden" id="page_url" value="{{ route('category.index') }}">
 <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -39,8 +39,8 @@
                         <!--begin::Actions-->
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
                             <!--begin::Primary button-->
-                            @can('general.computer-list')
-                                <a href="{{ route('general.computer.index') }}" title="All general.computer" class="btn btn-sm fw-bold btn-primary">View All</a>
+                            @can('logactivity-list')
+                                <a href="{{ route('admin.logActivity') }}" title="All Log Activities" class="btn btn-sm fw-bold btn-primary">View All</a>
                             @endcan
                         </div>
                         <!--end::Actions-->
@@ -60,7 +60,34 @@
                                 <!--begin::Table-->
                                 <table  class="table align-middle table-row-dashed fs-6 gy-5" id="audit-log-table">
                                     <tbody id="body">
-                                        <tr><th width="250px">Name</th><td>{!! $model->name !!}</td></tr><tr><th width="250px">Description</th><td>{!! $model->description !!}</td></tr><tr><th>Status</th><td>@if($model->status)<span class="badge badge-success">Active</span>@else<span class="badge badge-danger">In-Active</span>@endif</td></tr>
+                                        <tr>
+                                            <th>User </th>
+                                            <td>{{ $model->hasUser->name??'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Subject</th>
+                                            <td>{{ $model->subject }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>URL</th>
+                                            <td>{{ $model->url }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Method</th>
+                                            <td>{{ $model->method }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>IP Address</th>
+                                            <td>{{ $model->ip }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Agent</th>
+                                            <td>{{ $model->agent }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Created At</th>
+                                            <td>{{ date('d, M-Y h:i A', strtotime($model->created_at)) }}</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                                 <!--end::Table-->

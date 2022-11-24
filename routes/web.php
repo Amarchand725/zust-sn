@@ -30,16 +30,6 @@ Route::get('account/verify/{token}', [App\Http\Controllers\UserController::class
 Route::get('dashboard', [App\Http\Controllers\UserController::class, 'dashboard'])->name('dashboard')->middleware(['auth', 'is_verify_email']);
 
 // auto-routes: admin
-Route::get('computer/trash/records', 'App\Http\Controllers\general\ComputerController@trashRecords')->name('general.computer.trash.records');
-Route::get('computer/restore/{id}', 'App\Http\Controllers\general\ComputerController@restore')->name('general.computer.restore');
-Route::get('category/trash/records', 'App\Http\Controllers\general\CategoryController@trashRecords')->name('general.category.trash.records');
-Route::get('category/restore/{id}', 'App\Http\Controllers\general\CategoryController@restore')->name('general.category.restore');
-Route::get('computer/trash/records', 'App\Http\Controllers\general\ComputerController@trashRecords')->name('general.computer.trash.records');
-Route::get('computer/restore/{id}', 'App\Http\Controllers\general\ComputerController@restore')->name('general.computer.restore');
-Route::get('category/trash/records', 'App\Http\Controllers\general\CategoryController@trashRecords')->name('general.category.trash.records');
-Route::get('category/restore/{id}', 'App\Http\Controllers\general\CategoryController@restore')->name('general.category.restore');
-Route::get('computer/trash/records', 'App\Http\Controllers\general\ComputerController@trashRecords')->name('general.computer.trash.records');
-Route::get('computer/restore/{id}', 'App\Http\Controllers\general\ComputerController@restore')->name('general.computer.restore');
 Route::get('category/trash/records', 'App\Http\Controllers\general\CategoryController@trashRecords')->name('general.category.trash.records');
 Route::get('category/restore/{id}', 'App\Http\Controllers\general\CategoryController@restore')->name('general.category.restore');
 
@@ -73,7 +63,7 @@ Route::group(['prefix'=>'admin', 'middleware' => 'auth'], function() {
     Route::get('logactivity/restore/{id}', 'App\Http\Controllers\admin\SystemController@restore')->name('admin.logactivity.restore');
 
     //Menu
-    Route::get('menu/trash/records', 'App\Http\Controllers\admin\MenuController@trashAllmenu')->name('admin.menu.trash.records');
+    Route::get('menu/trash/records', 'App\Http\Controllers\admin\MenuController@trashRecords')->name('admin.menu.trash.records');
     Route::get('menu/restore/{id}', 'App\Http\Controllers\admin\MenuController@restore')->name('admin.menu.restore');
 
     //system controller
@@ -86,6 +76,7 @@ Route::group(['prefix'=>'admin', 'middleware' => 'auth'], function() {
     Route::post('system/email-config', [SystemController::class, 'emailConfigStore'])->name('admin.email-config');
 
     Route::get('logActivity', [SystemController::class, 'logActivity'])->name('admin.logActivity');
+    Route::get('logActivity/show/{id}', [SystemController::class, 'showLogActivity'])->name('admin.logActivity.show');
     Route::delete('logActivity/destroy/{id}', [SystemController::class, 'deleteLogActivity'])->name('admin.logactivity.destroy');
 
     //permissions
@@ -103,10 +94,4 @@ Route::group(['prefix'=>'admin', 'middleware' => 'auth'], function() {
 require __DIR__.'/auth.php';
 
 
-
-
-
-
-
- 
-Route::resource('general/computer', 'App\Http\Controllers\general\ComputerController');
+Route::resource('general/category', 'App\Http\Controllers\general\CategoryController');

@@ -3,11 +3,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Computer extends Model
+class Category extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'computers';
+    protected $table = 'categories';
     protected $guarded = [];
 
     static function getValidationRules(){

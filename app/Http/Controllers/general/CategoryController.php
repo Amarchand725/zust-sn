@@ -1,14 +1,14 @@
-<?php 
+<?php
 namespace App\Http\Controllers\general;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Menu;
-use App\Models\Computer;
+use App\Models\Category;
 use DB;
 use Str;
 
-class ComputerController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,24 +17,24 @@ class ComputerController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('computer-list');
+        $this->authorize('category-list');
         $per_page_records = 10;
         if(!empty(systemSetting())){
             $per_page_records = systemSetting()->per_page_record;
         }
         if($request->ajax()){
-            $query = Computer::orderby('id', 'desc')->where('id', '>', 0);
+            $query = Category::orderby('id', 'desc')->where('id', '>', 0);
             if($request['search'] != ""){
                 $query->where("name", "like", "%". $request["search"] ."%");$query->orWhere("description", "like", "%". $request["search"] ."%");
             }
             $models = $query->paginate($per_page_records);
-            return (string) view('general.computers._search', compact('models'));
+            return (string) view('general.categories._search', compact('models'));
         }
 
-        $page_title = Menu::where('menu', 'computer')->first()->label;
-        $models = Computer::orderby('id', 'desc')->paginate($per_page_records);
-        $onlySoftDeleted = Computer::onlyTrashed()->get();
-        return view('general.computers.index', compact('models', 'page_title', 'onlySoftDeleted'));
+        $page_title = Menu::where('menu', 'category')->first()->label;
+        $models = Category::orderby('id', 'desc')->paginate($per_page_records);
+        $onlySoftDeleted = Category::onlyTrashed()->get();
+        return view('general.categories.index', compact('models', 'page_title', 'onlySoftDeleted'));
     }
 
     /**
@@ -44,9 +44,9 @@ class ComputerController extends Controller
      */
     public function create()
     {
-        $this->authorize('computer-create');
-        $page_title = Menu::where('menu', 'computer')->first()->label;
-        return view('general.computers.create', compact('page_title'));
+        $this->authorize('category-create');
+        $page_title = Menu::where('menu', 'category')->first()->label;
+        return view('general.categories.create', compact('page_title'));
     }
 
     /**
@@ -56,16 +56,16 @@ class ComputerController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, Computer::getValidationRules());
+        $this->validate($request, Category::getValidationRules());
         $input = $request->all();
         DB::beginTransaction();
 
         try{
-            
-	        Computer::create($input);
+
+	        Category::create($input);
 
             DB::commit();
-            return redirect()->route('computer.index')->with('message', 'Computer Added Successfully !');
+            return redirect()->route('category.index')->with('message', 'Category Added Successfully !');
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Error. '.$e->getMessage());
@@ -80,9 +80,9 @@ class ComputerController extends Controller
      */
     public function show($id)
     {
-        $page_title = Menu::where('menu', 'computer')->first()->label;
-        $model = Computer::findOrFail($id);
-      	return view('general.computers.show', compact('page_title', 'model'));
+        $page_title = Menu::where('menu', 'category')->first()->label;
+        $model = Category::findOrFail($id);
+      	return view('general.categories.show', compact('page_title', 'model'));
     }
 
     /**
@@ -93,10 +93,10 @@ class ComputerController extends Controller
      */
     public function edit($id)
     {
-        $this->authorize('computer-edit');
-        $page_title = Menu::where('menu', 'computer')->first()->label;
-        $model = Computer::findOrFail($id);
-        return view('general.computers.edit', compact('page_title', 'model'));
+        $this->authorize('category-edit');
+        $page_title = Menu::where('menu', 'category')->first()->label;
+        $model = Category::findOrFail($id);
+        return view('general.categories.edit', compact('page_title', 'model'));
     }
 
     /**
@@ -107,18 +107,19 @@ class ComputerController extends Controller
      */
     public function update($id, Request $request)
     {
-        $model = Computer::findOrFail($id);
+        $model = Category::findOrFail($id);
 
-	    $this->validate($request, Computer::getValidationRules());
+        $validation = Category::getValidationRules();
+
+	    $this->validate($request, $validation);
 
         try{
             $input = [];
             foreach($request->toArray() as $key=>$req){
                 if(gettype($req)=='object'){
                     if (isset($key)) {
-                        $folder_name = Str::plural(str_replace(' ', '_', strtolower(Computer)));
-                        $image = date('d-m-Y-His').'.'.$request->file($key)->getClientOriginalExtension();
-                        $request->$key->move(public_path('/admin/assets/'.$folder_name), $image);
+                        $image = Str::random(5).date('d-m-Y-His').'.'.$request->file($key)->getClientOriginalExtension();
+                        $request->$key->move(public_path('/admin/images/categories'), $image);
                         $input[$key] = $image;
                     }
                 }else{
@@ -126,7 +127,7 @@ class ComputerController extends Controller
                 }
             }
 	        $model->fill($input)->save();
-            return redirect()->route('computer.index')->with('message', 'Computer update Successfully !');
+            return redirect()->route('category.index')->with('message', 'Category update Successfully !');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error. '.$e->getMessage());
         }
@@ -140,9 +141,9 @@ class ComputerController extends Controller
      */
     public function destroy($id)
     {
-        $this->authorize('computer-delete');
-        $model = Computer::findOrFail($id)->delete();
-        $onlySoftDeleted = Computer::onlyTrashed()->count();
+        $this->authorize('category-delete');
+        $model = Category::findOrFail($id)->delete();
+        $onlySoftDeleted = Category::onlyTrashed()->count();
         if($model){
             return response()->json([
                 'status' => true,
@@ -159,7 +160,7 @@ class ComputerController extends Controller
             $per_page_records = systemSetting()->per_page_record;
         }
         if($request->ajax()){
-            $query = Computer::where('id', '>', 0);
+            $query = Category::where('id', '>', 0);
             if($request['search'] != ""){
                 $query->where("name", "like", "%". $request["search"] ."%");$query->orWhere("description", "like", "%". $request["search"] ."%");
             }
@@ -167,14 +168,14 @@ class ComputerController extends Controller
                 $query->where('status', $request['status']);
             }
             $models = $query->where('deleted_at', '!=', NULL)->paginate($per_page_records);
-            return (string) view('general.computers.trash-search', compact('models'));
+            return (string) view('general.categories.trash-search', compact('models'));
         }
-        $models = Computer::onlyTrashed()->paginate($per_page_records);
-        return view('general.computers.trash-index', compact('models', 'page_title'));
+        $models = Category::onlyTrashed()->paginate($per_page_records);
+        return view('general.categories.trash-index', compact('models', 'page_title'));
     }
     public function restore($id)
     {
-        Computer::onlyTrashed()->where('id', $id)->restore();
+        Category::onlyTrashed()->where('id', $id)->restore();
         return redirect()->back()->with('message', 'Record Restored Successfully.');
     }
 }

@@ -108,16 +108,17 @@ class {ControllerName} extends Controller
     {
         $model = {modelName}::findOrFail($id);
 
-	    $this->validate($request, {modelName}::getValidationRules());
+        $validation = {modelName}::getValidationRules();
+        {update_validation}
+	    $this->validate($request, $validation);
 
         try{
             $input = [];
             foreach($request->toArray() as $key=>$req){
                 if(gettype($req)=='object'){
                     if (isset($key)) {
-                        $folder_name = Str::plural(str_replace(' ', '_', strtolower({modelName})));
-                        $image = date('d-m-Y-His').'.'.$request->file($key)->getClientOriginalExtension();
-                        $request->$key->move(public_path('/admin/assets/'.$folder_name), $image);
+                        $image = Str::random(5).date('d-m-Y-His').'.'.$request->file($key)->getClientOriginalExtension();
+                        $request->$key->move(public_path('/admin/images/{table_name}'), $image);
                         $input[$key] = $image;
                     }
                 }else{
