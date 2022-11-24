@@ -1,6 +1,7 @@
-<?php $__env->startSection('title', $page_title); ?>
-<?php $__env->startSection('content'); ?>
-<input type="hidden" id="page_url" value="<?php echo e(route('user.index')); ?>">
+@extends('admin.layouts.app')
+@section('title', $page_title)
+@section('content')
+<input type="hidden" id="page_url" value="{{ route('{index_route}.index') }}">
 <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -13,13 +14,13 @@
                         <!--begin::Page title-->
                         <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                             <!--begin::Title-->
-                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0"><?php echo e($page_title); ?></h1>
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">{{ $page_title }}</h1>
                             <!--end::Title-->
                             <!--begin::Breadcrumb-->
                             <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                                 <!--begin::Item-->
                                 <li class="breadcrumb-item text-muted">
-                                    <a href="<?php echo e(route('admin.dashboard')); ?>" class="text-muted text-hover-primary">Home</a>
+                                    <a href="{{ route('admin.dashboard') }}" class="text-muted text-hover-primary">Home</a>
                                 </li>
                                 <!--end::Item-->
                                 <!--begin::Item-->
@@ -34,6 +35,15 @@
                             <!--end::Breadcrumb-->
                         </div>
                         <!--end::Page title-->
+
+                        <!--begin::Actions-->
+                        <div class="d-flex align-items-center gap-2 gap-lg-3">
+                            <!--begin::Primary button-->
+                            @can('{index_route}-list')
+                                <a href="{{ route('{index_route}.index') }}" title="All {index_route}" class="btn btn-sm fw-bold btn-primary">View All</a>
+                            @endcan
+                        </div>
+                        <!--end::Actions-->
                     </div>
                     <!--end::Toolbar container-->
                 </div>
@@ -49,22 +59,8 @@
                             <div class="card-body pt-6">
                                 <!--begin::Table-->
                                 <table  class="table align-middle table-row-dashed fs-6 gy-5" id="audit-log-table">
-                                    <thead>
-                                        <tr>
-                                            <th  title="Log ID">SNo#</th>
-                                            <th  title="Location">Name</th>
-                                            <th  title="Location">Email</th>
-                                            <th  title="Created At">Created At</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $__currentLoopData = auth()->user()->unreadnotifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$notification): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <tr id="id-<?php echo e($notification->id); ?>">
-                                                <td> <?php echo e($notification->data['name']); ?> </td>
-                                                <td> <?php echo e($notification->data['email']); ?> </td>
-                                                <td><?php echo e(date('d, M-Y', strtotime($notification->data['created_at']))); ?></td>
-                                            </tr>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    <tbody id="body">
+                                        {show_form}
                                     </tbody>
                                 </table>
                                 <!--end::Table-->
@@ -81,9 +77,7 @@
         </div>
     </div>
 </div>
-<?php $__env->stopSection(); ?>
 
-<?php $__env->startPush('js'); ?>
-<?php $__env->stopPush(); ?>
-
-<?php echo $__env->make('admin.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp\www\admin-default\resources\views/admin/notification/index.blade.php ENDPATH**/ ?>
+@endsection
+@push('js')
+@endpush

@@ -35,6 +35,7 @@ class AdminUserSeeder extends Seeder
             'logactivity-list', 'logactivity-create', 'logactivity-edit', 'logactivity-delete',
             'companyprofile-list', 'companyprofile-create', 'companyprofile-edit', 'companyprofile-delete',
             'setting-list', 'setting-create', 'setting-edit', 'setting-delete',
+            'emailconfig-list', 'emailconfig-create', 'emailconfig-edit', 'emailconfig-delete',
         ];
         foreach ($permissions as $permission) {
             Permission::create([

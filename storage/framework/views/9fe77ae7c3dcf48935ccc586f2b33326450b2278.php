@@ -52,6 +52,8 @@
                 <!--end:Menu link--><!--begin:Menu sub-->
                 <div  class="menu-sub menu-sub-accordion menu-active-bg <?php echo e(request()->is('admin/user') ||
                                         request()->is('admin/user/*') ||
+                                        request()->is('admin/menu') ||
+                                        request()->is('admin/menu/*') ||
                                         request()->is('admin/role') ||
                                         request()->is('admin/role/*') ||
                                         request()->is('admin/permission') ||
@@ -62,6 +64,20 @@
                                         request()->is('admin/logActivity/*') ||
                                         request()->is('admin/system/email-config')
                                         ? 'show' : ''); ?>" >
+                    <!--begin:Menu item-->
+                    <div  class="menu-item" >
+                        <!--begin:Menu link-->
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('menu-list')): ?>
+                            <a class="menu-link <?php echo e(request()->is('admin/menu') || request()->is('admin/menu/*') ? 'active' : ''); ?>" href="<?php echo e(route('menu.index')); ?>" title="All Menus" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                                <span  class="menu-bullet" >
+                                    <span class="fa fa-bars"></span>
+                                </span>
+                                <span class="menu-title" > Menus</span>
+                            </a>
+                        <?php endif; ?>
+                        <!--end:Menu link-->
+                    </div>
+                    <!--end:Menu item-->
                     <!--begin:Menu item-->
                     <div  class="menu-item" >
                         <!--begin:Menu link-->
@@ -160,9 +176,139 @@
                         <!--end:Menu link-->
                     </div>
                     <!--end:Menu item-->
+                    <?php $__currentLoopData = menus(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $menu): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if(Auth::user()->hasRole('admin') || $menu->menu_of=='general'): ?>
+                            <!--begin:Menu link-->
+                            <?php $_menu = $menu->menu ?>
+                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check($_menu.'-list')): ?>
+                            <a class="menu-link <?php echo e(request()->is('admin/logActivity') ? 'active' : ''); ?>" href="<?php echo e(route('admin.logActivity')); ?>" title="System Log" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+                                <span  class="menu-bullet" >
+                                    <span class="fa fa-tasks"></span>
+                                </span>
+                                <span  class="menu-title" >All <?php echo e(Str::plural($menu->menu)); ?></span>
+                            </a>
+                            <?php endif; ?>
+                            <!--end:Menu link-->
+                        <?php elseif(Auth::user()->hasRole($menu->menu_of) || $menu->menu_of=='general'): ?>
+                            <!--begin:Menu link-->
+                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check($_menu.'-list')): ?>
+                            <a class="menu-link <?php echo e(request()->is('admin/logActivity') ? 'active' : ''); ?>" href="<?php echo e(route('admin.logActivity')); ?>" title="System Log" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+                                <span  class="menu-bullet" >
+                                    <span class="fa fa-tasks"></span>
+                                </span>
+                                <span  class="menu-title" >System Log</span>
+                            </a>
+                            <?php endif; ?>
+                            <!--end:Menu link-->
+                        <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
                 <!--end:Menu sub-->
             </div>
+            <!--end:Menu item--><!--begin:Menu item-->
+
+            <!--begin:Menu item-->
+            <?php $__currentLoopData = menus(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $menu): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php if(Auth::user()->hasRole('Admin') || $menu->menu_of=='general'): ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check($menu->menu.'-list')): ?>
+                        <div  data-kt-menu-trigger="click"  class="menu-item menu-accordion" >
+                            <!--begin:Menu link-->
+                            <span class="menu-link" >
+                                <span  class="menu-icon" >
+                                    <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen025.svg-->
+                                    <span class="svg-icon svg-icon-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <rect x="2" y="2" width="9" height="9" rx="2" fill="currentColor"/>
+                                            <rect opacity="0.3" x="13" y="2" width="9" height="9" rx="2" fill="currentColor"/>
+                                            <rect opacity="0.3" x="13" y="13" width="9" height="9" rx="2" fill="currentColor"/>
+                                            <rect opacity="0.3" x="2" y="13" width="9" height="9" rx="2" fill="currentColor"/>
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->
+                                </span>
+                                <span  class="menu-title" ><?php echo e(Str::ucfirst($menu->menu)); ?></span>
+                                <span  class="menu-arrow" ></span>
+                            </span>
+                            <!--end:Menu link--><!--begin:Menu sub-->
+                            <div  class="menu-sub menu-sub-accordion menu-active-bg <?php echo e(request()->is('admin/'.$menu->menu) ||
+                                                    request()->is('admin/'.$menu->menu.'/*')
+                                                    ? 'show' : ''); ?>" >
+                                <!--begin:Menu item-->
+                                <div  class="menu-item" >
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link <?php echo e(request()->is('admin/'.$menu->menu) ? 'active' : ''); ?>" href="<?php echo e(route($menu->menu.'.index')); ?>" title="<?php echo e($menu->lablel); ?>" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                                        <span  class="menu-bullet" ><?php echo $menu->icon; ?></span>
+                                        <span class="menu-title" > <?php echo e($menu->label); ?></span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <!--end:Menu item-->
+
+                                <!--begin:Menu item-->
+                                <div  class="menu-item" >
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link <?php echo e(request()->is('admin/'.$menu->menu.'/create') ? 'active' : ''); ?>" href="<?php echo e(route($menu->menu.'.create')); ?>" title="<?php echo e($menu->lablel); ?>" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                                        <span  class="menu-bullet" ><?php echo $menu->icon; ?></span>
+                                        <span class="menu-title" > Add New <?php echo e(Str::ucfirst($menu->menu)); ?></span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <!--end:Menu item-->
+                            </div>
+                            <!--end:Menu sub-->
+                        </div>
+                    <?php endif; ?>
+                <?php elseif(Auth::user()->hasRole($menu->menu_of) || $menu->menu_of=='general'): ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check($menu->menu.'-list')): ?>
+                        <div  data-kt-menu-trigger="click"  class="menu-item menu-accordion" >
+                            <!--begin:Menu link-->
+                            <span class="menu-link" >
+                                <span  class="menu-icon" >
+                                    <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen025.svg-->
+                                    <span class="svg-icon svg-icon-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <rect x="2" y="2" width="9" height="9" rx="2" fill="currentColor"/>
+                                            <rect opacity="0.3" x="13" y="2" width="9" height="9" rx="2" fill="currentColor"/>
+                                            <rect opacity="0.3" x="13" y="13" width="9" height="9" rx="2" fill="currentColor"/>
+                                            <rect opacity="0.3" x="2" y="13" width="9" height="9" rx="2" fill="currentColor"/>
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->
+                                </span>
+                                <span  class="menu-title" ><?php echo e(Str::ucfirst($menu->menu)); ?></span>
+                                <span  class="menu-arrow" ></span>
+                            </span>
+                            <!--end:Menu link--><!--begin:Menu sub-->
+                            <div  class="menu-sub menu-sub-accordion menu-active-bg <?php echo e(request()->is($menu->url) ||
+                                                    request()->is($menu->url.'/*')
+                                                    ? 'show' : ''); ?>" >
+                                <!--begin:Menu item-->
+                                <div  class="menu-item" >
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link <?php echo e(request()->is($menu->url) ? 'active' : ''); ?>" href="<?php echo e(route($menu->menu_of.'.'.$menu->menu.'.index')); ?>" title="<?php echo e($menu->lablel); ?>" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                                        <span  class="menu-bullet" ><?php echo $menu->icon; ?></span>
+                                        <span class="menu-title" > <?php echo e($menu->label); ?></span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <!--end:Menu item-->
+
+                                <!--begin:Menu item-->
+                                <div  class="menu-item" >
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link <?php echo e(request()->is($menu->url.'/create') ? 'active' : ''); ?>" href="<?php echo e(route($menu->menu_of.'.'.$menu->menu.'.create')); ?>" title="<?php echo e($menu->lablel); ?>" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" >
+                                        <span  class="menu-bullet" ><?php echo $menu->icon; ?></span>
+                                        <span class="menu-title" > Add New <?php echo e(Str::ucfirst($menu->menu)); ?></span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <!--end:Menu item-->
+                            </div>
+                            <!--end:Menu sub-->
+                        </div>
+                    <?php endif; ?>
+                <?php endif; ?>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             <!--end:Menu item--><!--begin:Menu item-->
         </div>
         <!--end::Menu-->

@@ -388,6 +388,8 @@
         @stack('js')
 
         <script>
+            $('select').selectpicker();
+
             @if(Session::has('message'))
                 toastr.options =
                 {

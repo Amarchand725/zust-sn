@@ -1,6 +1,6 @@
 <?php $__env->startSection('title', $page_title); ?>
 <?php $__env->startSection('content'); ?>
-<input type="hidden" id="page_url" value="<?php echo e(route('role.index')); ?>">
+<input type="hidden" id="page_url" value="<?php echo e(route('permission.index')); ?>">
 <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -38,10 +38,10 @@
                         <!--begin::Actions-->
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
                             <!--begin::Primary button-->
-                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('role-create')): ?>
-                                <a href="<?php echo e(route('role.create')); ?>" class="btn btn-sm fw-bold btn-primary">Add New Role</a>
+                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('menu-create')): ?>
+                                <a href="<?php echo e(route('menu.create')); ?>" class="btn btn-sm fw-bold btn-primary">Add New Menu</a>
                             <?php endif; ?>
-                            <a href="<?php echo e(route('admin.role.trash.records')); ?>" title="Role All Trash Records" class="btn btn-sm fw-bold btn-primary">Restore</a>
+                            <a href="<?php echo e(route('admin.menu.trash.records')); ?>" title="menu All Trash Records" class="btn btn-sm fw-bold btn-primary">Restore</a>
                             <span id="trash-record-count"><?php echo e(count($onlySoftDeleted)); ?></span> Records Deleted
                             <!--end::Primary button-->
                         </div>
@@ -65,11 +65,7 @@
                                         <!--begin::Item-->
                                         <li class="breadcrumb-item text-muted" style=" width: 100%; ">
                                             <input type="text" id="search" class="form-control" placeholder="Search...">
-                                            <select name="status" id="status" class="form-control" style="margin-left: 5px">
-                                                <option value="All" selected>Search by status</option>
-                                                <option value="1">Active</option>
-                                                <option value="0">InActive</option>
-                                            </select>
+                                            <input type="hidden" id="status" value="All">
                                         </li>
                                         <!--end::Item-->
                                     </ul>
@@ -79,40 +75,42 @@
                                 <table  class="table align-middle table-row-dashed fs-6 gy-5" id="audit-log-table">
                                     <thead>
                                         <tr>
-                                            <th  title="Log ID">SNo#</th>
-                                            <th  title="Location">Role</th>
-                                            <th  title="Description">Guard Name</th>
-                                            <th  title="Description">Status</th>
-                                            <th  title="Created At">Created At</th>
-                                            <th  title="Action">Action</th>
+                                            <th>SL</th>
+                                            <th>Menu of</th>
+                                            <th>Icon</th>
+                                            <th>Label</th>
+                                            <th>Parent</th>
+                                            <th>Menu</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="body">
-                                        <?php $__currentLoopData = $models; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$model): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <tr id="id-<?php echo e($model->id); ?>">
+                                        <?php $__currentLoopData = $models; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$menu): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <tr id="id-<?php echo e($menu->id); ?>" class="id-<?php echo e($menu->id); ?>">
                                                 <td><?php echo e($models->firstItem()+$key); ?>.</td>
-                                                <td><?php echo e($model->name); ?></td>
-                                                <td><?php echo e($model->guard_name); ?></td>
+                                                <td><?php echo e(Str::ucfirst($menu->menu_of)); ?></td>
+                                                <td><?php echo $menu->icon; ?></td>
+                                                <td><?php echo e(Str::ucfirst($menu->label)); ?></td>
+                                                <td><?php echo e(isset($menu->hasParent)?$menu->hasParent->menu:'--'); ?></td>
+                                                <td><?php echo e($menu->menu); ?></td>
                                                 <td>
-                                                    <?php if($model->status): ?>
+                                                    <?php if($menu->status): ?>
                                                         <span class="badge badge-success">Active</span>
                                                     <?php else: ?>
                                                         <span class="badge badge-danger">In-Active</span>
                                                     <?php endif; ?>
                                                 </td>
-                                                <td><?php echo e(date('d, M-Y', strtotime($model->created_at))); ?></td>
                                                 <td>
-                                                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('role-edit')): ?>
-                                                        <a href="<?php echo e(route('role.edit', $model->id)); ?>" data-toggle="tooltip" data-placement="top" title="Edit role" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Edit</a>
-                                                    <?php endif; ?>
-                                                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('role-delete')): ?>
-                                                        <button class="btn btn-danger btn-sm delete" data-slug="<?php echo e($model->id); ?>" data-del-url="<?php echo e(route('role.destroy', $model->id)); ?>"><i class="fa fa-trash"></i> Delete</button>
+                                                    <a href="<?php echo e(route('menu.edit', $menu->id)); ?>" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Edit</a>
+                                                    <?php if($menu->menu != 'Menu' && $menu->menu != 'Role' && $menu->menu != 'Page'): ?>
+                                                        <button class="btn btn-danger btn-sm delete" data-slug="<?php echo e($menu->id); ?>" data-del-url="<?php echo e(route('menu.destroy', $menu->id)); ?>"><i class="fa fa-trash"></i> Delete</button>
                                                     <?php endif; ?>
                                                 </td>
                                             </tr>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
-                                            <td colspan="6">
+                                            <td colspan="8">
                                                 Displying <?php echo e($models->firstItem()); ?> to <?php echo e($models->lastItem()); ?> of <?php echo e($models->total()); ?> records
                                                 <div class="d-flex justify-content-center">
                                                     <?php echo $models->links('pagination::bootstrap-4'); ?>
@@ -136,9 +134,9 @@
         </div>
     </div>
 </div>
-<?php $__env->stopSection(); ?>
 
+<?php $__env->stopSection(); ?>
 <?php $__env->startPush('js'); ?>
 <?php $__env->stopPush(); ?>
 
-<?php echo $__env->make('admin.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp\www\admin-default\resources\views/admin/role/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('admin.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp\www\admin-default\resources\views/admin/menus/index.blade.php ENDPATH**/ ?>

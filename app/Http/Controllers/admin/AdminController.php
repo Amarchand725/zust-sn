@@ -47,7 +47,7 @@ class AdminController extends Controller
         ], $messages);
 
         $user = User::where('email', $request->email)->first();
-        if(!empty($user) && $user->hasRole($request->role)){
+        if(!empty($user)){
             $credentials = $request->only('email', 'password');
 
             if (Auth::attempt($credentials)) {

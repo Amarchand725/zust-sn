@@ -389,6 +389,8 @@
         <?php echo $__env->yieldPushContent('js'); ?>
 
         <script>
+            $('select').selectpicker();
+
             <?php if(Session::has('message')): ?>
                 toastr.options =
                 {

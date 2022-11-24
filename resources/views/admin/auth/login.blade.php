@@ -14,8 +14,6 @@
                         <input type="hidden" id="admin-dashboard-route" value="{{ route('admin.dashboard') }}">
                         <form class="form w-100 fv-plugins-bootstrap5 fv-plugins-framework" id="sign_in_form" data-action="{{ route('admin.login') }}">
                             @csrf
-
-                            <input type="hidden" id="role" name="role" value="Admin">
                             <!--begin::Heading-->
                             <div class="text-center mb-11">
                                 <!--begin::Title-->
@@ -112,7 +110,6 @@
             e.preventDefault();
             var redirect_to = $('#admin-dashboard-route').val();
             var url = $('#sign_in_form').attr('data-action');
-            var role = $('#role').val();
             var email = $('#email').val();
             var password = $('#password').val();
 
@@ -122,7 +119,7 @@
             $.ajax({
                 type:'POST',
                 url:url,
-                data:{_token: "{{ csrf_token() }}", role:role, email:email, password:password},
+                data:{_token: "{{ csrf_token() }}", email:email, password:password},
                 success: function(response) {
                     $('.indicator-label').removeClass('d-none');
                     $('.indicator-progress').addClass('d-none');
