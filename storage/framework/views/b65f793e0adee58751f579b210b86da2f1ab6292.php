@@ -1,7 +1,6 @@
-@extends('admin.layouts.app')
-@section('title', $page_title)
-@section('content')
-<input type="hidden" id="page_url" value="{{ route('user.index') }}">
+<?php $__env->startSection('title', $page_title); ?>
+<?php $__env->startSection('content'); ?>
+<input type="hidden" id="page_url" value="<?php echo e(route('user.index')); ?>">
 <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -14,13 +13,13 @@
                         <!--begin::Page title-->
                         <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                             <!--begin::Title-->
-                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">{{ $page_title }}</h1>
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0"><?php echo e($page_title); ?></h1>
                             <!--end::Title-->
                             <!--begin::Breadcrumb-->
                             <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                                 <!--begin::Item-->
                                 <li class="breadcrumb-item text-muted">
-                                    <a href="{{ route('admin.dashboard') }}" class="text-muted text-hover-primary">Home</a>
+                                    <a href="<?php echo e(route('admin.dashboard')); ?>" class="text-muted text-hover-primary">Home</a>
                                 </li>
                                 <!--end::Item-->
                                 <!--begin::Item-->
@@ -39,11 +38,11 @@
                         <!--begin::Actions-->
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
                             <!--begin::Primary button-->
-                            @can('user-create')
-                                <a href="{{ route('user.create') }}" class="btn btn-sm fw-bold btn-primary">Add New User</a>
-                            @endcan
-                            <a href="{{ route('admin.user.trash.records') }}" title="User All Trash Records" class="btn btn-sm fw-bold btn-primary">Restore</a>
-                            <span id="trash-record-count">{{ count($onlySoftDeleted) }}</span> Records Deleted
+                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('user-create')): ?>
+                                <a href="<?php echo e(route('user.create')); ?>" class="btn btn-sm fw-bold btn-primary">Add New User</a>
+                            <?php endif; ?>
+                            <a href="<?php echo e(route('admin.user.trash.records')); ?>" title="User All Trash Records" class="btn btn-sm fw-bold btn-primary">Restore</a>
+                            <span id="trash-record-count"><?php echo e(count($onlySoftDeleted)); ?></span> Records Deleted
                             <!--end::Primary button-->
                         </div>
                         <!--end::Actions-->
@@ -90,53 +89,55 @@
                                         </tr>
                                     </thead>
                                     <tbody id="body">
-                                        @foreach ($models as $key=>$model)
-                                            @if($model->roles[0]->name != 'Admin')
-                                                <tr id="id-{{ $model->id }}">
-                                                    <td>{{  $models->firstItem()+$key }}.</td>
+                                        <?php $__currentLoopData = $models; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$model): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php if($model->roles[0]->name != 'Admin'): ?>
+                                                <tr id="id-<?php echo e($model->id); ?>">
+                                                    <td><?php echo e($models->firstItem()+$key); ?>.</td>
                                                     <td>
-                                                        @if(!empty($model->hasProfile) && $model->hasProfile->avatar)
-                                                            <img src="{{ asset('public/avatar') }}/{{ $model->hasProfile->avatar }}" class="rounded" width="50px" alt="">
-                                                        @else
-                                                            <img src="{{ asset('public/avatar/default.png') }}" width="50px" alt="">
-                                                        @endif
+                                                        <?php if(!empty($model->hasProfile) && $model->hasProfile->avatar): ?>
+                                                            <img src="<?php echo e(asset('public/avatar')); ?>/<?php echo e($model->hasProfile->avatar); ?>" class="rounded" width="50px" alt="">
+                                                        <?php else: ?>
+                                                            <img src="<?php echo e(asset('public/avatar/default.png')); ?>" width="50px" alt="">
+                                                        <?php endif; ?>
                                                     </td>
                                                     <td>
                                                         <ul>
-                                                            @foreach ($model->roles as $role)
-                                                                <li>{{ $role->name }}</li>
-                                                            @endforeach
+                                                            <?php $__currentLoopData = $model->roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                <li><?php echo e($role->name); ?></li>
+                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                         </ul>
                                                     </td>
-                                                    <td>{{ $model->name }}</td>
+                                                    <td><?php echo e($model->name); ?></td>
                                                     <td>
-                                                        {{ $model->email }}
+                                                        <?php echo e($model->email); ?>
+
                                                     </td>
                                                     <td>
-                                                        @if($model->status)
+                                                        <?php if($model->status): ?>
                                                             <span class="badge badge-success">Active</span>
-                                                        @else
+                                                        <?php else: ?>
                                                             <span class="badge badge-danger">In-Active</span>
-                                                        @endif
+                                                        <?php endif; ?>
                                                     </td>
                                                     <td>
-                                                        <a href="{{route('admin.user.create-spacial-permission', $model->id)}}" data-toggle="tooltip" data-placement="top" title="Assign Spacial Permissions" class="btn btn-warning btn-sm"><i class="fa fa-lock"></i></a>
-                                                        <a href="{{route('user.show', $model->id)}}" data-toggle="tooltip" data-placement="top" title="Show Details" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>
-                                                        @can('user-edit')
-                                                            <a href="{{route('user.edit', $model->id)}}" data-toggle="tooltip" data-placement="top" title="Edit user" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                                        @endcan
-                                                        @can('user-delete')
-                                                            <button class="btn btn-danger btn-sm delete" data-slug="{{ $model->id }}" data-del-url="{{ route('user.destroy', $model->id) }}"><i class="fa fa-trash"></i></button>
-                                                        @endcan
+                                                        <a href="<?php echo e(route('admin.user.create-spacial-permission', $model->id)); ?>" data-toggle="tooltip" data-placement="top" title="Assign Spacial Permissions" class="btn btn-warning btn-sm"><i class="fa fa-lock"></i></a>
+                                                        <a href="<?php echo e(route('user.show', $model->id)); ?>" data-toggle="tooltip" data-placement="top" title="Show Details" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>
+                                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('user-edit')): ?>
+                                                            <a href="<?php echo e(route('user.edit', $model->id)); ?>" data-toggle="tooltip" data-placement="top" title="Edit user" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
+                                                        <?php endif; ?>
+                                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('user-delete')): ?>
+                                                            <button class="btn btn-danger btn-sm delete" data-slug="<?php echo e($model->id); ?>" data-del-url="<?php echo e(route('user.destroy', $model->id)); ?>"><i class="fa fa-trash"></i></button>
+                                                        <?php endif; ?>
                                                     </td>
                                                 </tr>
-                                            @endif
-                                        @endforeach
+                                            <?php endif; ?>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
                                             <td colspan="6">
-                                                Displying {{$models->firstItem()}} to {{$models->lastItem()}} of {{$models->total()}} records
+                                                Displying <?php echo e($models->firstItem()); ?> to <?php echo e($models->lastItem()); ?> of <?php echo e($models->total()); ?> records
                                                 <div class="d-flex justify-content-center">
-                                                    {!! $models->links('pagination::bootstrap-4') !!}
+                                                    <?php echo $models->links('pagination::bootstrap-4'); ?>
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -156,7 +157,9 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('js')
-@endpush
+<?php $__env->startPush('js'); ?>
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('admin.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp\www\zust-sn\resources\views/admin/user/index.blade.php ENDPATH**/ ?>

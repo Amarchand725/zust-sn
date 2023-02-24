@@ -1,7 +1,6 @@
-@extends('admin.layouts.app')
-@section('title', $page_title)
-@section('content')
-<input type="hidden" id="page_url" value="{{ route('category.index') }}">
+<?php $__env->startSection('title', $page_title); ?>
+<?php $__env->startSection('content'); ?>
+<input type="hidden" id="page_url" value="<?php echo e(route('category.index')); ?>">
 <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -14,13 +13,13 @@
                         <!--begin::Page title-->
                         <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                             <!--begin::Title-->
-                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">{{ $page_title }}</h1>
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0"><?php echo e($page_title); ?></h1>
                             <!--end::Title-->
                             <!--begin::Breadcrumb-->
                             <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                                 <!--begin::Item-->
                                 <li class="breadcrumb-item text-muted">
-                                    <a href="{{ route('admin.dashboard') }}" class="text-muted text-hover-primary">Home</a>
+                                    <a href="<?php echo e(route('admin.dashboard')); ?>" class="text-muted text-hover-primary">Home</a>
                                 </li>
                                 <!--end::Item-->
                                 <!--begin::Item-->
@@ -39,9 +38,9 @@
                         <!--begin::Actions-->
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
                             <!--begin::Primary button-->
-                            @can('user-list')
-                                <a href="{{ route('user.index') }}" title="All Users" class="btn btn-sm fw-bold btn-primary">View All</a>
-                            @endcan
+                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('user-list')): ?>
+                                <a href="<?php echo e(route('user.index')); ?>" title="All Users" class="btn btn-sm fw-bold btn-primary">View All</a>
+                            <?php endif; ?>
                         </div>
                         <!--end::Actions-->
                     </div>
@@ -63,45 +62,45 @@
                                         <tr>
                                             <th width="250px">Avatar</th>
                                             <td>
-                                                @if(!empty($model->hasProfile) && $model->hasProfile->avatar)
-                                                    <img src="{{ asset('public/avatar') }}/{{ $model->hasProfile->avatar }}" class="rounded" width="50px" alt="">
-                                                @else
-                                                    <img src="{{ asset('public/avatar/default.png') }}" width="50px" alt="">
-                                                @endif
+                                                <?php if(!empty($model->hasProfile) && $model->hasProfile->avatar): ?>
+                                                    <img src="<?php echo e(asset('public/avatar')); ?>/<?php echo e($model->hasProfile->avatar); ?>" class="rounded" width="50px" alt="">
+                                                <?php else: ?>
+                                                    <img src="<?php echo e(asset('public/avatar/default.png')); ?>" width="50px" alt="">
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>Member From </th>
-                                            <td>{!! date('d, M Y h:i A', strtotime($model->created_at)) !!}</td>
+                                            <td><?php echo date('d, M Y h:i A', strtotime($model->created_at)); ?></td>
                                         </tr>
                                         <tr>
                                             <th>First Name</th>
-                                            <td>{!! isset($model->hasProfile)?$model->hasProfile->first_name:'' !!}</td>
+                                            <td><?php echo isset($model->hasProfile)?$model->hasProfile->first_name:''; ?></td>
                                         </tr>
                                         <tr>
                                             <th>Last Name</th>
-                                            <td>{!! isset($model->hasProfile)?$model->hasProfile->last_name:'' !!}</td>
+                                            <td><?php echo isset($model->hasProfile)?$model->hasProfile->last_name:''; ?></td>
                                         </tr>
                                         <tr>
                                             <th>Phone</th>
-                                            <td>{!! isset($model->hasProfile)?$model->hasProfile->phone:'' !!}</td>
+                                            <td><?php echo isset($model->hasProfile)?$model->hasProfile->phone:''; ?></td>
                                         </tr>
                                         <tr>
                                             <th>Email</th>
-                                            <td>{!! isset($model->email)?$model->email:'' !!}</td>
+                                            <td><?php echo isset($model->email)?$model->email:''; ?></td>
                                         </tr>
                                         <tr>
                                             <th>Address</th>
-                                            <td>{!! isset($model->hasProfile)?$model->hasProfile->address:'' !!}</td>
+                                            <td><?php echo isset($model->hasProfile)?$model->hasProfile->address:''; ?></td>
                                         </tr>
                                         <tr>
                                             <th>Status</th>
                                             <td>
-                                                @if($model->status)
+                                                <?php if($model->status): ?>
                                                     <span class="badge badge-success">Active</span>
-                                                @else
+                                                <?php else: ?>
                                                     <span class="badge badge-danger">In-Active</span>
-                                                @endif
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -121,6 +120,8 @@
     </div>
 </div>
 
-@endsection
-@push('js')
-@endpush
+<?php $__env->stopSection(); ?>
+<?php $__env->startPush('js'); ?>
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('admin.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp\www\zust-sn\resources\views/admin/user/show.blade.php ENDPATH**/ ?>

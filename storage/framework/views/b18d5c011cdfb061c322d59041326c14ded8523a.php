@@ -1,9 +1,8 @@
-@extends('admin.layouts.app')
-@section('title', $page_title)
-@push('css')
+<?php $__env->startSection('title', $page_title); ?>
+<?php $__env->startPush('css'); ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
-@endpush
-@section('content')
+<?php $__env->stopPush(); ?>
+<?php $__env->startSection('content'); ?>
 <div id="kt_app_content" class="app-content" style="margin-top:5px">
     <!--begin::Content container-->
     <div id="kt_app_content_container" class="app-container ">
@@ -13,10 +12,10 @@
             <div class="card-header border-0 cursor-pointer" role="button" >
                 <!--begin::Card title-->
                 <div class="card-title m-0">
-                    <h3 class="fw-bolder m-0">{{ $page_title }}</h3>
+                    <h3 class="fw-bolder m-0"><?php echo e($page_title); ?></h3>
                 </div>
                 <div class="content-header-right mt-3">
-                    <a href="{{ route('user.index') }}" title="All Users" class="btn btn-primary btn-sm">View All</a>
+                    <a href="<?php echo e(route('user.index')); ?>" title="All Users" class="btn btn-primary btn-sm">View All</a>
                 </div>
                 <!--end::Card title-->
             </div>
@@ -25,9 +24,10 @@
             <!--begin::Content-->
             <div id="" class="collapse show">
                 <!--begin::Form-->
-                <form action="{{ route('user.update', $user->id) }}" id="regform" class="form-horizontal" enctype="multipart/form-data" method="post" accept-charset="utf-8">
-                    @csrf
-                    {{ method_field('PATCH') }}
+                <form action="<?php echo e(route('user.update', $user->id)); ?>" id="regform" class="form-horizontal" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+                    <?php echo csrf_field(); ?>
+                    <?php echo e(method_field('PATCH')); ?>
+
 
                     <div class="card-body border-top p-9">
                         <!--begin::Input group-->
@@ -39,21 +39,21 @@
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
                                 <select name="roles[]" class="selectpicker" multiple data-live-search="true">
-                                    @foreach ($roles as $role)
-                                        @php $bool = true; @endphp
-                                        @foreach ($user->roles as $user_role)
-                                            @if($role->name==$user_role->name)
-                                                @php $bool = false; @endphp
-                                                <option value="{{ $role->name }}" selected>{{ $role->name }}</option>
-                                            @endif
-                                        @endforeach
-                                        @if($bool)
-                                            <option value="{{ $role->name }}">{{ $role->name }}</option>
-                                        @endif
-                                    @endforeach
+                                    <?php $__currentLoopData = $roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php $bool = true; ?>
+                                        <?php $__currentLoopData = $user->roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user_role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php if($role->name==$user_role->name): ?>
+                                                <?php $bool = false; ?>
+                                                <option value="<?php echo e($role->name); ?>" selected><?php echo e($role->name); ?></option>
+                                            <?php endif; ?>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        <?php if($bool): ?>
+                                            <option value="<?php echo e($role->name); ?>"><?php echo e($role->name); ?></option>
+                                        <?php endif; ?>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                                 <br />
-                                <span style="color: red">{{ $errors->first('roles') }}</span>
+                                <span style="color: red"><?php echo e($errors->first('roles')); ?></span>
                             </div>
                             <!--end::Col-->
                         </div>
@@ -66,15 +66,15 @@
                             <!--begin::Label-->
                             <label class="col-lg-4 col-form-label fw-bold fs-6">Avatar</label>
                             <!--end::Label-->
-                            @php $avatar = asset('public/avatar/default.png'); @endphp
-                            @if(!empty($user->hasProfile) && $user->hasProfile->avatar)
-                                @php
+                            <?php $avatar = asset('public/avatar/default.png'); ?>
+                            <?php if(!empty($user->hasProfile) && $user->hasProfile->avatar): ?>
+                                <?php
                                  $avatar = asset('public/avatar').'/'.$user->hasProfile->avatar;
-                                @endphp
-                            @endif
+                                ?>
+                            <?php endif; ?>
                             <!--begin::Col-->
                             <div class="col-lg-8">
-                                <div class="image-input image-input-outline image-input-empty" data-kt-image-input="true" style="background-image: url({{ $avatar }})">
+                                <div class="image-input image-input-outline image-input-empty" data-kt-image-input="true" style="background-image: url(<?php echo e($avatar); ?>)">
                                     <!--begin::Preview existing avatar-->
                                     <div class="image-input-wrapper w-125px h-125px" style="background-image: none;"></div>
                                     <!--end::Preview existing avatar-->
@@ -119,8 +119,8 @@
 
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <input type="text" name="first_name" value="{{ $user->hasProfile->first_name??'' }}" class="form-control form-control-lg form-control-solid" placeholder="Enter first_name"/>
-                                <span style="color: red">{{ $errors->first('first_name') }}</span>
+                                <input type="text" name="first_name" value="<?php echo e($user->hasProfile->first_name??''); ?>" class="form-control form-control-lg form-control-solid" placeholder="Enter first_name"/>
+                                <span style="color: red"><?php echo e($errors->first('first_name')); ?></span>
                             </div>
                             <!--end::Col-->
                         </div>
@@ -134,8 +134,8 @@
 
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <input type="text" name="last_name" value="{{ $user->hasProfile->last_name??'' }}" class="form-control form-control-lg form-control-solid" placeholder="Enter last_name"/>
-                                <span style="color: red">{{ $errors->first('last_name') }}</span>
+                                <input type="text" name="last_name" value="<?php echo e($user->hasProfile->last_name??''); ?>" class="form-control form-control-lg form-control-solid" placeholder="Enter last_name"/>
+                                <span style="color: red"><?php echo e($errors->first('last_name')); ?></span>
                             </div>
                             <!--end::Col-->
                         </div>
@@ -149,8 +149,8 @@
 
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <input type="tel" name="phone" value="{{ $user->hasProfile->phone??'' }}" class="form-control form-control-lg form-control-solid" placeholder="Enter phone"/>
-                                <span style="color: red">{{ $errors->first('phone') }}</span>
+                                <input type="tel" name="phone" value="<?php echo e($user->hasProfile->phone??''); ?>" class="form-control form-control-lg form-control-solid" placeholder="Enter phone"/>
+                                <span style="color: red"><?php echo e($errors->first('phone')); ?></span>
                             </div>
                             <!--end::Col-->
                         </div>
@@ -164,8 +164,8 @@
 
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <input type="text" name="address" value="{{ $user->hasProfile->address??'' }}" class="form-control form-control-lg form-control-solid" placeholder="Enter address"/>
-                                <span style="color: red">{{ $errors->first('address') }}</span>
+                                <input type="text" name="address" value="<?php echo e($user->hasProfile->address??''); ?>" class="form-control form-control-lg form-control-solid" placeholder="Enter address"/>
+                                <span style="color: red"><?php echo e($errors->first('address')); ?></span>
                             </div>
                             <!--end::Col-->
                         </div>
@@ -179,8 +179,8 @@
 
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <input type="email" name="email" value="{{ $user->email??'' }}" class="form-control form-control-lg form-control-solid" placeholder="Enter email"/>
-                                <span style="color: red">{{ $errors->first('email') }}</span>
+                                <input type="email" name="email" value="<?php echo e($user->email??''); ?>" class="form-control form-control-lg form-control-solid" placeholder="Enter email"/>
+                                <span style="color: red"><?php echo e($errors->first('email')); ?></span>
                             </div>
                             <!--end::Col-->
                         </div>
@@ -194,8 +194,8 @@
 
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <input type="password" name="password" value="{{ old('password') }}" class="form-control form-control-lg form-control-solid" placeholder="Enter password"/>
-                                <span style="color: red">{{ $errors->first('password') }}</span>
+                                <input type="password" name="password" value="<?php echo e(old('password')); ?>" class="form-control form-control-lg form-control-solid" placeholder="Enter password"/>
+                                <span style="color: red"><?php echo e($errors->first('password')); ?></span>
                             </div>
                             <!--end::Col-->
                         </div>
@@ -209,8 +209,8 @@
 
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <input type="password" name="password_confirmation" value="{{ old('password_confirmation') }}" class="form-control form-control-lg form-control-solid" placeholder="Enter password_confirmation"/>
-                                <span style="color: red">{{ $errors->first('password_confirmation') }}</span>
+                                <input type="password" name="password_confirmation" value="<?php echo e(old('password_confirmation')); ?>" class="form-control form-control-lg form-control-solid" placeholder="Enter password_confirmation"/>
+                                <span style="color: red"><?php echo e($errors->first('password_confirmation')); ?></span>
                             </div>
                             <!--end::Col-->
                         </div>
@@ -241,11 +241,13 @@
         </div>
     </div>
 </div>
-@endsection
-@push('js')
+<?php $__env->stopSection(); ?>
+<?php $__env->startPush('js'); ?>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 <script>
     $('select').selectpicker();
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('admin.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp\www\zust-sn\resources\views/admin/user/edit.blade.php ENDPATH**/ ?>
