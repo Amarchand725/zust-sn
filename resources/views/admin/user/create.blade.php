@@ -28,6 +28,7 @@
                 <form action="{{ route('user.store') }}" id="regform" class="form-horizontal" enctype="multipart/form-data" method="post" accept-charset="utf-8">
                     @csrf
 
+                    <input type="hidden" id="test1" value="1" name="accept_privacy">
                     <div class="card-body border-top p-9">
                         <!--begin::Input group-->
                         <div class="row mb-6">

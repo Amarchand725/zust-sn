@@ -19,7 +19,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 //Frontend
-Route::get('/', [WebController::class, 'index'])->name('home');
+Route::group(['middleware' => 'auth'], function() {
+    Route::get('/', [WebController::class, 'index'])->name('home');
+});
 
 Route::group(['middleware' => ['guest']], function(){
     Route::get('admin/login', [AdminController::class, 'login'])->name('admin.login');

@@ -58,7 +58,7 @@ class RegisteredUserController extends Controller
             $roles = Role::orderby('id', 'desc')->where('name', '!=', 'Admin')->where('status', 1)->get();
             return view('admin.user.create', compact('roles', 'page_title'));
         }else{
-            return view('auth.register');
+            return view('frontend.auth.register');
         }
     }
 
@@ -73,29 +73,31 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "roles"    => "required|array|min:1",
-            "roles.*"  => "required|string|distinct|min:1",
+            'accept_privacy' => ['required'],
             'first_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        DB::beginTransaction();
-
         $name = $request->first_name.' '.$request->last_name;
+
         try{
+            DB::beginTransaction();
             $user = User::create([
                 'name' => $name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
 
-            $user->assignRole($request->input('roles'));
-
+            if(sizeof($request->roles)>0 && $request->roles[0] != ""){
+                $user->assignRole($request->input('roles'));
+            }else{
+                $user->assignRole('User');
+            }
             if($user){
                 $model = new UserProfile();
 
-                if ($request->avatar) {
+                if (isset($request->avatar) && $request->avatar) {
                     $avatar = time().'.'.$request->avatar->extension();
                     $request->avatar->move(public_path('avatar'), $avatar);
 
@@ -104,14 +106,13 @@ class RegisteredUserController extends Controller
 
                 $model->user_id = $user->id;
                 $model->first_name = $request->first_name;
-                $model->last_name = $request->first_name;
+                $model->last_name = $request->last_name;
                 $model->phone = $request->phone;
                 $model->address = $request->address;
                 $model->save();
             }
 
             event(new Registered($user));
-
 
             \LogActivity::addToLog('New User Registered');
 
@@ -122,23 +123,22 @@ class RegisteredUserController extends Controller
                 $admin = User::role('Admin')->first();
                 $admin->notify(new RegisterUserNotification($user));
 
-                $token = Str::random(64);
+                // $token = Str::random(64);
 
-                UserVerify::create([
-                    'user_id' => $user->id,
-                    'token' => $token
-                    ]);
+                // UserVerify::create([
+                //     'user_id' => $user->id,
+                //     'token' => $token
+                // ]);
 
-                Mail::send('emails.emailVerificationEmail', ['token' => $token], function($message) use($request){
-                    $message->to($request->email);
-                    $message->subject('Email Verification Mail');
-                });
+                // Mail::send('emails.emailVerificationEmail', ['token' => $token], function($message) use($request){
+                //     $message->to($request->email);
+                //     $message->subject('Email Verification Mail');
+                // });
 
                 DB::commit();
-                return redirect()->back()->with('message', 'We have sent you email.');
+                // return redirect()->back()->with('message', 'We have sent you email.');
 
-                /* Auth::login($user);
-                return redirect(RouteServiceProvider::HOME); */
+                return redirect()->route('login');
             }
         } catch (\Exception $e) {
             DB::rollback();
