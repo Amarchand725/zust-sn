@@ -18,9 +18,15 @@ return new class extends Migration
             $table->integer('user_id');
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->string('avatar')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('birthday')->nullable();
+            $table->string('birthplace')->nullable();
+            $table->string('occupation')->nullable();
+            $table->string('marital_status')->default('single')->comment('single,married,divorced');
+            $table->string('blood_group')->nullable();
             $table->string('phone')->nullable();
-            $table->string('address')->nullable();
+            $table->string('about_me')->nullable();
+            $table->string('website')->nullable();
             $table->timestamps();
         });
     }

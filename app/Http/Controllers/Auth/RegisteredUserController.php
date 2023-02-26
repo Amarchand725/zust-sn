@@ -83,7 +83,13 @@ class RegisteredUserController extends Controller
 
         try{
             DB::beginTransaction();
+
+            do{
+                $slug = Str::random(6);
+            }while(User::where('slug', $slug)->first());
+
             $user = User::create([
+                'slug' => $slug,
                 'name' => $name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),

@@ -51,6 +51,6 @@
         </ul>
     </div>
     <div class="profile-btn">
-        <a href="my-profile.html" class="default-btn">View Profile</a>
+        <a href="{{ route('my-profile') }}" class="default-btn">View Profile</a>
     </div>
 </div>

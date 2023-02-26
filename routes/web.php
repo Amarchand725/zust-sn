@@ -21,7 +21,23 @@ use Illuminate\Support\Facades\Route;
 //Frontend
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/', [WebController::class, 'index'])->name('home');
+    Route::get('/notifications', [WebController::class, 'notification'])->name('notifications');
+    Route::get('/chat', [WebController::class, 'chat'])->name('chat');
+    Route::get('/friends', [WebController::class, 'friends'])->name('friends');
+    Route::get('/groups', [WebController::class, 'groups'])->name('groups');
+    Route::get('/favorite', [WebController::class, 'favorite'])->name('favorite');
+    Route::get('/events', [WebController::class, 'events'])->name('events');
+    Route::get('/live-chat', [WebController::class, 'liveChat'])->name('live-chat');
+    Route::get('/birthday', [WebController::class, 'birthday'])->name('birthday');
+    Route::get('/videos', [WebController::class, 'videos'])->name('videos');
+    Route::get('/weather', [WebController::class, 'weather'])->name('weather');
+    Route::get('/marketplace', [WebController::class, 'marketplace'])->name('marketplace');
+    Route::get('/my-profile', [WebController::class, 'myProfile'])->name('my-profile');
+    Route::get('/account-setting', [WebController::class, 'accountSetting'])->name('account-setting');
+    Route::get('/help-and-support', [WebController::class, 'helpAndSupport'])->name('help-and-support');
 });
+
+Route::get('/privacy', [WebController::class, 'privacy'])->name('privacy');
 
 Route::group(['middleware' => ['guest']], function(){
     Route::get('admin/login', [AdminController::class, 'login'])->name('admin.login');

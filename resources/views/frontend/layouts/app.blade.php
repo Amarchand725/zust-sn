@@ -40,21 +40,21 @@
 
         <!-- Start Main Content Wrapper Area -->
         <div class="main-content-wrapper d-flex flex-column">
-
             <!-- Start Navbar Area -->
-            @include('frontend.layouts.top-navbar')
+            @include('frontend.layouts.top-nav.top-navbar')
             <!-- End Navbar Area -->
 
             <!-- Start Sidemenu Area -->
             @include('frontend.layouts.left-sidebar')
             <!-- End Sidemenu Area -->
 
+            <!-- Main Content -->
             @yield('content')
+            <!-- Main Content -->
 
             <!-- Start Right Sidebar Area -->
             @include('frontend.layouts.right-sidebar')
             <!-- End Right Sidebar Area -->
-
         </div>
         <!-- End Main Content Wrapper Area -->
 
@@ -62,7 +62,7 @@
         <div class="copyrights-area">
             <div class="container">
                 <div class="row align-items-center">
-                    <p><i class="ri-copyright-line"></i> <script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>document.write(new Date().getFullYear())</script> Zust. All Rights Reserved by <a href="https://envytheme.com/" target="_blank">EnvyTheme</a></p>
+                    <p><i class="ri-copyright-line"></i> <script data-cfasync="false" src="../../cd n-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>document.write(new Date().getFullYear())</script> Zust. All Rights Reserved by <a href="https://envytheme.com/" target="_blank">EnvyTheme</a></p>
                 </div>
             </div>
         </div>
