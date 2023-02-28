@@ -21,8 +21,12 @@
         <link rel="stylesheet" href="{{ asset('public/frontend') }}/assets/css/style.css">
         <link rel="stylesheet" href="{{ asset('public/frontend') }}/assets/css/dark.css">
 		<link rel="stylesheet" href="{{ asset('public/frontend') }}/assets/css/responsive.css">
+        <link rel="stylesheet" href="{{asset('public/admin/css/toastr.min.css')}}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 
         <link rel="icon" type="image/png" href="{{ asset('public/frontend') }}/assets/images/favicon.png">
+
+        @stack('styles')
     </head>
 
     <body>
@@ -84,6 +88,10 @@
         <script src="{{ asset('public/frontend') }}/assets/js/owl.carousel.min.js"></script>
         <script src="{{ asset('public/frontend') }}/assets/js/wow.min.js"></script>
         <script src="{{ asset('public/frontend') }}/assets/js/main.js"></script>
+        <script src="{{asset('public/admin/js/toastr.min.js')}}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+        @stack('scripts')
     </body>
 
 <!-- Mirrored from templates.envytheme.com/zust/default/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 Feb 2023 18:13:26 GMT -->

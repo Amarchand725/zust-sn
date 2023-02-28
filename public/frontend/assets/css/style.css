@@ -4742,6 +4742,18 @@ My Profile Area CSS
   transition: var(--transition);
 }
 
+.single-friends-card .friends-content .button-group .add-friend-btn .add-friend-btn {
+    background-color: #F4F7FC;
+    border: 1px solid #d9dfe6;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    color: var(--paragraph-color);
+    -webkit-transition: var(--transition);
+    transition: var(--transition);
+  }
+
 .single-friends-card .friends-content .button-group .send-message-btn button {
   background-color: #F4F7FC;
   border: 1px solid #d9dfe6;
@@ -4764,6 +4776,12 @@ My Profile Area CSS
   border: 1px solid var(--main-color);
   color: var(--white-color);
 }
+
+.single-friends-card:hover .friends-content .button-group .add-friend-btn .add-friend-btn {
+    background-color: var(--main-color);
+    border: 1px solid var(--main-color);
+    color: var(--white-color);
+  }
 
 .photos-inner-box-style {
   background-color: var(--white-color);

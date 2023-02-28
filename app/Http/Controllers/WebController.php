@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\UserFriend;
+use Auth;
+use Illuminate\Support\Str;
 
 class WebController extends Controller
 {
@@ -20,11 +24,62 @@ class WebController extends Controller
     }
     public function friends()
     {
-        return view('frontend.home.friends');
+        $data = [];
+        $data['friend_requests'] = UserFriend::orderby('id','desc')->where('user_slug', Auth::user()->slug)->paginate(12);
+        $friends = UserFriend::where('user_slug', Auth::user()->slug)->orwhere('friend_slug', Auth::user()->slug)->where('accept_reject', 1)->get(['friend_slug']);
+        $data['suggest_friends'] = User::role('User')->orderby('id', 'desc')->where('slug', '!=', Auth::user()->slug)->whereNotIn('slug', $friends)->paginate(12);
+        return view('frontend.home.friends', compact('data'));
     }
+
+    public function AddNewFriend($slug)
+    {
+        $sent_request = UserFriend::create([
+            'user_slug' => $slug,
+            'friend_slug' => Auth::user()->slug,
+        ]);
+
+        if($sent_request){
+            return redirect()->back()->with('message', 'You have friend request successfully!');
+        }
+    }
+
+    public function unFriend($slug)
+    {
+        $accepted = UserFriend::where('user_slug', Auth::user()->slug)->where('friend_slug', $slug)
+                    ->orWhere('user_slug', $slug)->where('friend_slug', Auth::user()->slug)
+                    ->update([
+                        'un_friend_by_slug' => Auth::user()->slug,
+                        'un_friend' => 1,
+                    ]);
+        if($accepted){
+            return redirect()->back()->with('message', 'You have blocked friend successfully!');
+        }
+    }
+
+    public function confirmFriendRequest($slug)
+    {
+        $accepted = UserFriend::where('user_slug', Auth::user()->slug)->where('friend_slug', $slug)->update([
+            'notify' => 1,
+            'accept_reject' => 1,
+        ]);
+
+        if($accepted){
+            return redirect()->back()->with('message', 'You have accepted friend request successfully!');
+        }
+    }
+
+    public function userProfile($slug)
+    {
+        $data = [];
+        $data['user'] = User::where('slug', $slug)->first();
+        return view('frontend.home.my-profile', compact('data'));
+    }
+
     public function groups()
     {
-        return view('frontend.home.groups');
+        $data = [];
+        $data['friends'] = UserFriend::where('user_slug', Auth::user()->slug)->orWhere('friend_slug', Auth::user()->slug)->where('un_friend', 0)->get();
+        return view('frontend.home.groups', compact('data'));
     }
     public function favorite()
     {

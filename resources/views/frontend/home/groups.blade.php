@@ -13,7 +13,10 @@
                     <a class="nav-link active" id="all-groups-tab" data-bs-toggle="tab" href="#all-groups" role="tab" aria-controls="all-groups">All Groups</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="most-members-tab" data-bs-toggle="tab" href="#most-members" role="tab" aria-controls="most-members">Most Members</a>
+                    <a class="nav-link" id="most-members-tab" data-bs-toggle="tab" href="#suggest-groups" role="tab" aria-controls="suggest-groups">Suggest Groups</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="most-members-tab" data-bs-toggle="tab" href="#create-new-group" role="tab" aria-controls="create-new-group">Create New Group</a>
                 </li>
             </ul>
 
@@ -551,7 +554,7 @@
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="most-members" role="tabpanel">
+            <div class="tab-pane fade" id="suggest-groups" role="tabpanel">
                 <div class="row justify-content-center">
                     <div class="col-lg-3 col-sm-6">
                         <div class="single-groups-card">
@@ -1073,6 +1076,67 @@
 
                 <div class="load-more-posts-btn">
                     <a href="#"><i class="flaticon-loading"></i> Load More</a>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="create-new-group" role="tabpanel">
+                <div class="row justify-content-center">
+                    <div class="col-lg-12 col-sm-6">
+                        <div class="single-groups-card">
+                            <div class="groups-content">
+                                <div class="groups-info d-flex justify-content-between align-items-center">
+                                    <div class="text ms-3">
+                                        <h3><a href="#">Create New Group</a></h3>
+                                    </div>
+                                </div>
+
+                                <div class="text ms-3 mt-3">
+                                    <form action="{{ route('group.store') }}" method="post" enctype="multipart/form-data">
+                                        @csrf
+
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <label for="group_type">Group Type</label>
+                                                <select name="group_type" id="group_type" class="form-control">
+                                                    <option value="0" selected>Public</option>
+                                                    <option value="1">Private</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-8 mt-2">
+                                                <label for="group_name">Group Name</label>
+                                                <input type="text" name="group_name" id="group_name" class="form-control" placeholder="Enter group name">
+                                            </div>
+                                            <div class="col-sm-8 mt-2">
+                                                <label for="profile_image">Profile Image</label>
+                                                <input type="file" accept="image/*" name="profile_image" id="profile_image" class="form-control" placeholder="Enter group name">
+                                            </div>
+                                            <div class="col-sm-8 mt-2">
+                                                <label for="cover_image">Cover Image</label>
+                                                <input type="file" accept="image/*" name="cover_image" id="cover_image" class="form-control" placeholder="Enter group name">
+                                            </div>
+                                            <div class="col-sm-8 mt-2">
+                                                <label for="friends">Add Friends</label>
+                                                <select name="friends[]" multiple id="friends" class="form-control select2">
+                                                    <option value="" selected>Add Friends</option>
+                                                    @foreach ($data['friends'] as $friend)
+                                                        @if($friend->user_slug==Auth::user()->slug)
+                                                            <option value="{{ $friend->friend_slug }}">{{ $friend->hasFriend->name }}</option>
+                                                        @else
+                                                            <option value="{{ $friend->user_slug }}">{{ $friend->hasUser->name }}</option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-8 mt-4">
+                                                <div class="send-message-btn">
+                                                    <button type="submit" class="btn btn-primary">Create Group</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

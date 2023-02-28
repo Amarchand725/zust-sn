@@ -17,8 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('user_slug');
             $table->string('friend_slug');
+            $table->string('un_friend_by_slug')->nullable()->comment('slug of user who make unfriend.');
             $table->boolean('notify')->default(0)->comment('user requested to become friend');
             $table->boolean('accept_reject')->default(0)->comment('1=accepted 2=rejected');
+            $table->boolean('un_friend')->default(0);
             $table->boolean('status')->default(1);
             $table->string('deleted_at')->nullable();
             $table->timestamps();

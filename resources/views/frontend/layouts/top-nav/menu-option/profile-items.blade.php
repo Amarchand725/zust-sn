@@ -2,8 +2,16 @@
     <div class="dropdown profile-nav-item">
         <a href="#" class="dropdown-bs-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <div class="menu-profile">
-                <img src="{{ asset('public/frontend') }}/assets/images/user/user-1.jpg" class="rounded-circle" alt="image">
-                <span class="name">Matthew</span>
+                @if(Auth::check() && isset(Auth::user()->hasAvatar()->avatar))
+                    <img src="{{ asset('public/frontend') }}/assets/images/user/{{ Auth::user()->hasAvatar()->avatar }}" class="rounded-circle" alt="image">
+                @else
+                    <img src="{{ asset('public/frontend') }}/assets/images/user/user-1.jpg" class="rounded-circle" alt="image">
+                @endif
+                <span class="name">
+                    @if(Auth::check())
+                        {{ Auth::user()->name }}
+                    @endif
+                </span>
                 <span class="status-online"></span>
             </div>
         </a>

@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('followers', function (Blueprint $table) {
             $table->id();
-            $table->string('page_slug');
+            $table->string('page_slug')->nullable();
+            $table->string('user_slug')->nullable();
             $table->string('follower_slug');
             $table->boolean('status')->default(1);
             $table->string('deleted_at')->nullable();

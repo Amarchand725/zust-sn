@@ -4,6 +4,7 @@ use App\Http\Controllers\admin\PermissionController;
 use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\SystemController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,15 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/my-profile', [WebController::class, 'myProfile'])->name('my-profile');
     Route::get('/account-setting', [WebController::class, 'accountSetting'])->name('account-setting');
     Route::get('/help-and-support', [WebController::class, 'helpAndSupport'])->name('help-and-support');
+
+    //
+    Route::get('add-new-friend/{slug}', [WebController::class, 'AddNewFriend'])->name('add-new-friend');
+    Route::get('un-friend/{slug}', [WebController::class, 'unFriend'])->name('un-friend');
+    Route::get('user-profile/{slug}', [WebController::class, 'userProfile'])->name('user-profile');
+    Route::get('confirm-friend-request/{slug}', [WebController::class, 'confirmFriendRequest'])->name('confirm-friend-request');
+
+    Route::post('group.store', [GroupController::class, 'store'])->name('group.store');
+
 });
 
 Route::get('/privacy', [WebController::class, 'privacy'])->name('privacy');
