@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('page_likeds', function (Blueprint $table) {
+        Schema::create('page_likes', function (Blueprint $table) {
             $table->id();
             $table->string('user_slug');
             $table->string('page_slug');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('page_likeds');
+        Schema::dropIfExists('page_likes');
     }
 };

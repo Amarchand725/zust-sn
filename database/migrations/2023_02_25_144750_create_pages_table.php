@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
             $table->string('user_slug');
-            $table->string('page_slug');
-            $table->string('page_name');
-            $table->string('category');
+            $table->string('slug');
+            $table->string('name');
+            $table->string('category_slug')->comment('business category like music, beauty or health etc.');
             $table->text('bio')->nullable();
             $table->boolean('status')->default(1);
             $table->string('deleted_at')->nullable();

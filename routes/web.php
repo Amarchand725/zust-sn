@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\SystemController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/chat', [WebController::class, 'chat'])->name('chat');
     Route::get('/friends', [WebController::class, 'friends'])->name('friends');
     Route::get('/groups', [WebController::class, 'groups'])->name('groups');
+    
     Route::get('/favorite', [WebController::class, 'favorite'])->name('favorite');
     Route::get('/events', [WebController::class, 'events'])->name('events');
     Route::get('/live-chat', [WebController::class, 'liveChat'])->name('live-chat');
@@ -36,6 +38,9 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/my-profile', [WebController::class, 'myProfile'])->name('my-profile');
     Route::get('/account-setting', [WebController::class, 'accountSetting'])->name('account-setting');
     Route::get('/help-and-support', [WebController::class, 'helpAndSupport'])->name('help-and-support');
+
+    Route::get('/pages', [PageController::class, 'index'])->name('pages');
+    Route::post('/page/store', [PageController::class, 'store'])->name('page.store');
 
     //
     Route::get('add-new-friend/{slug}', [WebController::class, 'AddNewFriend'])->name('add-new-friend');

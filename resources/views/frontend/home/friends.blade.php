@@ -65,8 +65,8 @@
                                         <li>
                                             <a href="{{ route('user-profile', $friend_request->friend_slug) }}">
                                                 <span class="item-number">
-                                                    @if(isset($friend_request->hasUser->hasPost) && isset($friend_request->hasUser->hasPost->hasLikes))
-                                                        {{ count($friend_request->hasUser->hasPost->hasLikes) }}
+                                                    @if(isset($friend_request->hasUser->hasPosts) && isset($friend_request->hasUser->hasPosts->hasLikes))
+                                                        {{ count($friend_request->hasUser->hasPosts->hasLikes) }}
                                                     @else
                                                         0
                                                     @endif
@@ -150,8 +150,8 @@
                                         <li>
                                             <a href="{{ route('user-profile', $suggest_friend->slug) }}">
                                                 <span class="item-number">
-                                                    @if(isset($suggest_friend->hasPost) && isset($suggest_friend->hasPost->hasLikes))
-                                                        {{ count($suggest_friend->hasPost->hasLikes) }}
+                                                    @if(isset($suggest_friend->hasPosts) && isset($suggest_friend->hasPosts->hasLikes))
+                                                        {{ count($suggest_friend->hasPosts->hasLikes) }}
                                                     @else
                                                         0
                                                     @endif

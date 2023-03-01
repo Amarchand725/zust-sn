@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
+        Schema::create('business_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('user_slug')->comment('Owner of this group');
-            $table->string('slug')->comment('slug of group');
-            $table->string('name')->comment('name of group');
-            $table->string('privacy')->default(1)->comment('1=>public or 2=>private');
+            $table->string('parent_slug')->nullable();
+            $table->string('name');
+            $table->string('slug');
+            $table->string('description')->nullable();
             $table->boolean('status')->default(1);
+            $table->string('image')->nullable();
             $table->string('deleted_at')->nullable();
             $table->timestamps();
         });
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('business_categories');
     }
 };

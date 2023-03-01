@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
+        Schema::create('group_profile_photos', function (Blueprint $table) {
             $table->id();
-            $table->string('user_slug')->comment('Owner of this group');
-            $table->string('slug')->comment('slug of group');
-            $table->string('name')->comment('name of group');
-            $table->string('privacy')->default(1)->comment('1=>public or 2=>private');
-            $table->boolean('status')->default(1);
+            $table->string('group_slug');
+            $table->string('mime_type');
+            $table->string('photo');
+            $table->boolean('status')->default(0);
             $table->string('deleted_at')->nullable();
             $table->timestamps();
         });
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('group_profile_photos');
     }
 };

@@ -37,6 +37,12 @@
                     <span class="menu-title">Groups</span>
                 </a>
             </li>
+            <li class="nav-item {{ request()->is('pages') ? 'active' : '' }}">
+                <a href="{{ route('pages') }}" class="nav-link">
+                    <span class="icon"><i class="flaticon-team"></i></span>
+                    <span class="menu-title">Pages</span>
+                </a>
+            </li>
             <li class="nav-item {{ request()->is('favorite') ? 'active' : '' }}">
                 <a href="{{ route('favorite') }}" class="nav-link">
                     <span class="icon"><i class="flaticon-star"></i></span>

@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('group_cover_photos', function (Blueprint $table) {
+        Schema::create('page_contacts', function (Blueprint $table) {
             $table->id();
-            $table->string('group_slug');
-            $table->string('mime_type');
-            $table->string('photo');
-            $table->boolean('status')->default(0);
-            $table->string('deleted_at')->nullable();
+            $table->string('page_slug');
+            $table->string('website')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('group_cover_photos');
+        Schema::dropIfExists('page_contacts');
     }
 };

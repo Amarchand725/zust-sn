@@ -28,7 +28,13 @@
                     <ul class="statistics">
                         <li>
                             <a href="#">
-                                <span class="item-number">59862</span>
+                                <span class="item-number">
+                                    @if(isset(Auth::user()->hasUser->hasPosts) && isset(Auth::user()->hasUser->hasPosts->hasLikes))
+                                        {{ count(Auth::user()->hasUser->hasPosts->hasLikes) }}
+                                    @else
+                                        0
+                                    @endif
+                                </span>
                                 <span class="item-text">Likes</span>
                             </a>
                         </li>

@@ -72,7 +72,7 @@ class User extends Authenticatable
         return $this->hasMany(Followers::class, 'follower_slug', 'slug');
     }
 
-    public function hasPost()
+    public function hasPosts()
     {
         return $this->hasMany(Post::class, 'user_slug', 'slug');
     }

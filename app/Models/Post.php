@@ -12,6 +12,6 @@ class Post extends Model
 
     public function hasLikes()
     {
-        return $this->hasMany(PostLike::class, 'post_slug', 'slug');
+        return $this->hasMany(PostLike::class, 'post_slug', 'slug')->orderby('id', 'desc');
     }
 }

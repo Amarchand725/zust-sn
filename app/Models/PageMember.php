@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PageLogo extends Model
+class PageMember extends Model
 {
     use HasFactory;
-    protected $guarded = [];
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserFriend;
+use App\Models\Group;
+use App\Models\GroupMember;
 use Auth;
 use Illuminate\Support\Str;
 
@@ -78,7 +80,10 @@ class WebController extends Controller
     public function groups()
     {
         $data = [];
-        $data['friends'] = UserFriend::where('user_slug', Auth::user()->slug)->orWhere('friend_slug', Auth::user()->slug)->where('un_friend', 0)->get();
+        $data['friends'] = UserFriend::orderby('id', 'desc')->where('user_slug', Auth::user()->slug)->orWhere('friend_slug', Auth::user()->slug)->where('un_friend', 0)->get();
+        $data['your_groups'] = Group::orderby('id', 'desc')->where('user_slug', Auth::user()->slug)->get();
+        $data['groups'] = Group::orderby('id', 'desc')->where('user_slug', '!=', Auth::user()->slug)->get();
+        
         return view('frontend.home.groups', compact('data'));
     }
     public function favorite()

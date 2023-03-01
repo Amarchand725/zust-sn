@@ -10,4 +10,9 @@ class PostLike extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function hasUser()
+    {
+        return $this->hasOne(User::class, 'slug', 'user_slug');
+    }
 }
