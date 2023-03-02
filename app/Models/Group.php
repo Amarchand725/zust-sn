@@ -13,7 +13,7 @@ class Group extends Model
 
     public function hasMembers()
     {
-        return $this->hasMany(GroupMember::class, 'slug', 'group_slug')->where('accept_leave', 1);
+        return $this->hasMany(GroupMember::class, 'group_slug', 'slug')->where('accept_leave', 1);
     }
     public function hasPosts()
     {

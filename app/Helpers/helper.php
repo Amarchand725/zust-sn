@@ -5,6 +5,7 @@ use App\Models\CompanyProfile;
 use App\Models\EmailConfig;
 use App\Models\GroupMember;
 use App\Models\UserFriend;
+use App\Models\PageMember;
 use Illuminate\Support\Facades\Auth;
 
 function menus(){
@@ -33,5 +34,9 @@ function confirmFriendRequest($friend_slug){
 }
 
 function checkGroupMember($group_slug, $user_slug){
-    return GroupMember::where('slug', $group_slug)->where('user_slug')->first();
+    return GroupMember::where('group_slug', $group_slug)->where('user_slug', $user_slug)->first();
+}
+
+function checkPageMember($page_slug, $user_slug){
+    return PageMember::where('user_slug', $user_slug)->where('page_slug', $page_slug)->first();
 }

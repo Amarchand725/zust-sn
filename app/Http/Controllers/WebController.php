@@ -83,7 +83,7 @@ class WebController extends Controller
         $data['friends'] = UserFriend::orderby('id', 'desc')->where('user_slug', Auth::user()->slug)->orWhere('friend_slug', Auth::user()->slug)->where('un_friend', 0)->get();
         $data['your_groups'] = Group::orderby('id', 'desc')->where('user_slug', Auth::user()->slug)->get();
         $data['groups'] = Group::orderby('id', 'desc')->where('user_slug', '!=', Auth::user()->slug)->get();
-        
+
         return view('frontend.home.groups', compact('data'));
     }
     public function favorite()

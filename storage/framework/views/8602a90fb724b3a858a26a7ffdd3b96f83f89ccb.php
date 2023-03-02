@@ -1,6 +1,4 @@
-@extends('frontend.layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <!-- Start Content Page Box Area -->
     <div class="content-page-box-area">
         <div class="page-banner-box bg-5">
@@ -34,19 +32,19 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="all-groups" role="tabpanel">
                 <div class="row">
-                    @foreach ($data['groups'] as $group)
-                        @if(checkGroupMember($group->slug, Auth::user()->slug))
+                    <?php $__currentLoopData = $data['groups']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if(checkGroupMember($group->slug, Auth::user()->slug)): ?>
                             <div class="col-lg-3 col-sm-6">
                                 <div class="single-groups-card">
                                     <div class="groups-image">
                                         <a href="#">
-                                            <img src="{{ asset('public/frontend') }}/assets/images/groups/groups-bg-1.jpg" alt="image">
+                                            <img src="<?php echo e(asset('public/frontend')); ?>/assets/images/groups/groups-bg-1.jpg" alt="image">
                                         </a>
                                     </div>
                                     <div class="groups-content">
                                         <div class="groups-info d-flex justify-content-between align-items-center">
                                             <a href="#">
-                                                <img src="{{ asset('public/frontend') }}/assets/images/groups/groups-1.jpg" alt="image">
+                                                <img src="<?php echo e(asset('public/frontend')); ?>/assets/images/groups/groups-1.jpg" alt="image">
                                             </a>
                                             <div class="text ms-3">
                                                 <h3><a href="#">Graphic Design</a></h3>
@@ -79,44 +77,44 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
-                    @endforeach
+                        <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
 
-                @if(count($data['groups']))
+                <?php if(count($data['groups'])): ?>
                     <div class="load-more-posts-btn">
                         <a href="#"><i class="flaticon-loading"></i> Load More</a>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
 
             <div class="tab-pane fade" id="your-groups" role="tabpanel">
                 <div class="row">
-                    @foreach ($data['your_groups'] as $group)
+                    <?php $__currentLoopData = $data['your_groups']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="col-lg-3 col-sm-6">
                             <div class="single-groups-card">
                                 <div class="groups-image">
                                     <a href="#">
-                                        <img src="{{ asset('public/frontend') }}/assets/images/groups/groups-bg-1.jpg" alt="image">
+                                        <img src="<?php echo e(asset('public/frontend')); ?>/assets/images/groups/groups-bg-1.jpg" alt="image">
                                     </a>
                                 </div>
                                 <div class="groups-content">
                                     <div class="groups-info d-flex justify-content-between align-items-center">
                                         <a href="#">
-                                            @if(isset($group->hasGroupProfilePhoto))
-                                                <img src="{{ asset('public/frontend') }}/frontend/images/group_profiles/{{ $group->hasGroupProfilePhoto->photo }}" alt="image">
-                                            @else
-                                                <img src="{{ asset('public/frontend') }}/assets/images/groups/groups-1.jpg" alt="image">
-                                            @endif
+                                            <?php if(isset($group->hasGroupProfilePhoto)): ?>
+                                                <img src="<?php echo e(asset('public/frontend')); ?>/frontend/images/group_profiles/<?php echo e($group->hasGroupProfilePhoto->photo); ?>" alt="image">
+                                            <?php else: ?>
+                                                <img src="<?php echo e(asset('public/frontend')); ?>/assets/images/groups/groups-1.jpg" alt="image">
+                                            <?php endif; ?>
                                         </a>
                                         <div class="text ms-3">
-                                            <h3><a href="#">{{ $group->name }}</a></h3>
+                                            <h3><a href="#"><?php echo e($group->name); ?></a></h3>
                                             <span>
-                                                @if($group->privacy==1)
+                                                <?php if($group->privacy==1): ?>
                                                     Public
-                                                @else
+                                                <?php else: ?>
                                                     Private
-                                                @endif
+                                                <?php endif; ?>
                                                 Groups
                                             </span>
                                         </div>
@@ -124,19 +122,19 @@
                                     <ul class="statistics">
                                         <li>
                                             <a href="#">
-                                                <span class="item-number">{{ count($group->hasPosts) }}</span>
+                                                <span class="item-number"><?php echo e(count($group->hasPosts)); ?></span>
                                                 <span class="item-text">Post</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#">
-                                                <span class="item-number">{{ count($group->hasMembers) }}</span>
+                                                <span class="item-number"><?php echo e(count($group->hasMembers)); ?></span>
                                                 <span class="item-text">Members</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#">
-                                                <span class="item-number">{{ date('Y', strtotime($group->created_at)) }}</span>
+                                                <span class="item-number"><?php echo e(date('Y', strtotime($group->created_at))); ?></span>
                                                 <span class="item-text">Since</span>
                                             </a>
                                         </li>
@@ -147,7 +145,7 @@
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
 
                 <div class="load-more-posts-btn">
@@ -157,19 +155,19 @@
 
             <div class="tab-pane fade" id="suggest-groups" role="tabpanel">
                 <div class="row">
-                    @foreach ($data['groups'] as $group)
-                        @if(!checkGroupMember($group->slug, Auth::user()->slug))
+                    <?php $__currentLoopData = $data['groups']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if(!checkGroupMember($group->slug, Auth::user()->slug)): ?>
                             <div class="col-lg-3 col-sm-6">
                                 <div class="single-groups-card">
                                     <div class="groups-image">
                                         <a href="#">
-                                            <img src="{{ asset('public/frontend') }}/assets/images/groups/groups-bg-1.jpg" alt="image">
+                                            <img src="<?php echo e(asset('public/frontend')); ?>/assets/images/groups/groups-bg-1.jpg" alt="image">
                                         </a>
                                     </div>
                                     <div class="groups-content">
                                         <div class="groups-info d-flex justify-content-between align-items-center">
                                             <a href="#">
-                                                <img src="{{ asset('public/frontend') }}/assets/images/groups/groups-1.jpg" alt="image">
+                                                <img src="<?php echo e(asset('public/frontend')); ?>/assets/images/groups/groups-1.jpg" alt="image">
                                             </a>
                                             <div class="text ms-3">
                                                 <h3><a href="#">Graphic Design</a></h3>
@@ -202,15 +200,15 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
-                    @endforeach
+                        <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
 
-                @if(count($data['groups']))
+                <?php if(count($data['groups'])): ?>
                     <div class="load-more-posts-btn">
                         <a href="#"><i class="flaticon-loading"></i> Load More</a>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
 
             <div class="tab-pane fade" id="create-new-group" role="tabpanel">
@@ -225,8 +223,8 @@
                                 </div>
 
                                 <div class="text ms-3 mt-3">
-                                    <form action="{{ route('group.store') }}" method="post" enctype="multipart/form-data">
-                                        @csrf
+                                    <form action="<?php echo e(route('group.store')); ?>" method="post" enctype="multipart/form-data">
+                                        <?php echo csrf_field(); ?>
 
                                         <div class="row">
                                             <div class="col-sm-8">
@@ -252,13 +250,13 @@
                                                 <label for="friends">Add Friends</label>
                                                 <select name="friends[]" multiple id="friends" class="form-control select2">
                                                     <option value="" selected>Add Friends</option>
-                                                    @foreach ($data['friends'] as $friend)
-                                                        @if($friend->user_slug==Auth::user()->slug)
-                                                            <option value="{{ $friend->friend_slug }}">{{ $friend->hasFriend->name }}</option>
-                                                        @else
-                                                            <option value="{{ $friend->user_slug }}">{{ $friend->hasUser->name }}</option>
-                                                        @endif
-                                                    @endforeach
+                                                    <?php $__currentLoopData = $data['friends']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $friend): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <?php if($friend->user_slug==Auth::user()->slug): ?>
+                                                            <option value="<?php echo e($friend->friend_slug); ?>"><?php echo e($friend->hasFriend->name); ?></option>
+                                                        <?php else: ?>
+                                                            <option value="<?php echo e($friend->user_slug); ?>"><?php echo e($friend->hasUser->name); ?></option>
+                                                        <?php endif; ?>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </select>
                                             </div>
                                             <div class="col-sm-8 mt-4">
@@ -277,4 +275,6 @@
         </div>
     </div>
     <!-- End Content Page Box Area -->
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('frontend.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp\www\zust-sn\resources\views/frontend/home/groups.blade.php ENDPATH**/ ?>

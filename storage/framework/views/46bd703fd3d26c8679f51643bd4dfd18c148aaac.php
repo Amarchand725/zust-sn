@@ -1,6 +1,4 @@
-@extends('frontend.layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <!-- Start Content Page Box Area -->
     <div class="content-page-box-area">
         <div class="page-banner-box bg-5">
@@ -34,22 +32,22 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="all-pages" role="tabpanel">
                 <div class="row justify-content-center">
-                    @foreach ($data['pages'] as $page)
-                        @if(checkPageMember($page->slug, Auth::user()->slug))
+                    <?php $__currentLoopData = $data['pages']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if(checkPageMember($page->slug, Auth::user()->slug)): ?>
                             <div class="col-lg-3 col-sm-6">
                                 <div class="single-groups-card">
                                     <div class="groups-image">
                                         <a href="#">
-                                            <img src="{{ asset('public/frontend') }}/assets/images/groups/groups-bg-1.jpg" alt="image">
+                                            <img src="<?php echo e(asset('public/frontend')); ?>/assets/images/groups/groups-bg-1.jpg" alt="image">
                                         </a>
                                     </div>
                                     <div class="groups-content">
                                         <div class="groups-info d-flex justify-content-between align-items-center">
                                             <a href="#">
-                                                <img src="{{ asset('public/frontend') }}/assets/images/groups/groups-1.jpg" alt="image">
+                                                <img src="<?php echo e(asset('public/frontend')); ?>/assets/images/groups/groups-1.jpg" alt="image">
                                             </a>
                                             <div class="text ms-3">
-                                                <h3><a href="#">{{ $page->name }}</a></h3>
+                                                <h3><a href="#"><?php echo e($page->name); ?></a></h3>
                                                 <span>Public Groups</span>
                                             </div>
                                         </div>
@@ -79,44 +77,44 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
-                    @endforeach
+                        <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
 
-                @if(count($data['pages']))
+                <?php if(count($data['pages'])): ?>
                     <div class="load-more-posts-btn">
                         <a href="#"><i class="flaticon-loading"></i> Load More</a>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
 
             <div class="tab-pane fade" id="your-pages" role="tabpanel">
                 <div class="row">
-                    @foreach ($data['your_pages'] as $page)
+                    <?php $__currentLoopData = $data['your_pages']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="col-lg-3 col-sm-6">
                             <div class="single-groups-card">
                                 <div class="groups-image">
                                     <a href="#">
-                                        <img src="{{ asset('public/frontend') }}/assets/images/groups/groups-bg-1.jpg" alt="image">
+                                        <img src="<?php echo e(asset('public/frontend')); ?>/assets/images/groups/groups-bg-1.jpg" alt="image">
                                     </a>
                                 </div>
                                 <div class="groups-content">
                                     <div class="groups-info d-flex justify-content-between align-items-center">
                                         <a href="#">
-                                            @if(isset($page->hasGroupProfilePhoto))
-                                                <img src="{{ asset('public/frontend') }}/frontend/images/group_profiles/{{ $page->hasGroupProfilePhoto->photo }}" alt="image">
-                                            @else
-                                                <img src="{{ asset('public/frontend') }}/assets/images/groups/groups-1.jpg" alt="image">
-                                            @endif
+                                            <?php if(isset($page->hasGroupProfilePhoto)): ?>
+                                                <img src="<?php echo e(asset('public/frontend')); ?>/frontend/images/group_profiles/<?php echo e($page->hasGroupProfilePhoto->photo); ?>" alt="image">
+                                            <?php else: ?>
+                                                <img src="<?php echo e(asset('public/frontend')); ?>/assets/images/groups/groups-1.jpg" alt="image">
+                                            <?php endif; ?>
                                         </a>
                                         <div class="text ms-3">
-                                            <h3><a href="#">{{ $page->name }}</a></h3>
+                                            <h3><a href="#"><?php echo e($page->name); ?></a></h3>
                                             <span>
-                                                @if($page->privacy==1)
+                                                <?php if($page->privacy==1): ?>
                                                     Public
-                                                @else
+                                                <?php else: ?>
                                                     Private
-                                                @endif
+                                                <?php endif; ?>
                                                 Groups
                                             </span>
                                         </div>
@@ -124,19 +122,19 @@
                                     <ul class="statistics">
                                         <li>
                                             <a href="#">
-                                                <span class="item-number">{{ isset($page->hasPosts)? count($page->hasPosts):0 }}</span>
+                                                <span class="item-number"><?php echo e(isset($page->hasPosts)? count($page->hasPosts):0); ?></span>
                                                 <span class="item-text">Post</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#">
-                                                <span class="item-number">{{ isset($page->hasMembers)?count($page->hasMembers):0 }}</span>
+                                                <span class="item-number"><?php echo e(isset($page->hasMembers)?count($page->hasMembers):0); ?></span>
                                                 <span class="item-text">Members</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#">
-                                                <span class="item-number">{{ date('Y', strtotime($page->created_at)) }}</span>
+                                                <span class="item-number"><?php echo e(date('Y', strtotime($page->created_at))); ?></span>
                                                 <span class="item-text">Since</span>
                                             </a>
                                         </li>
@@ -147,7 +145,7 @@
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
 
                 <div class="load-more-posts-btn">
@@ -157,32 +155,32 @@
 
             <div class="tab-pane fade" id="you-may-know-pages" role="tabpanel">
                 <div class="row">
-                    @foreach ($data['pages'] as $page)
-                        @if(!checkPageMember($page->slug, Auth::user()->slug))
+                    <?php $__currentLoopData = $data['pages']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if(!checkPageMember($page->slug, Auth::user()->slug)): ?>
                             <div class="col-lg-3 col-sm-6">
                                 <div class="single-groups-card">
                                     <div class="groups-image">
                                         <a href="#">
-                                            <img src="{{ asset('public/frontend') }}/assets/images/groups/groups-bg-1.jpg" alt="image">
+                                            <img src="<?php echo e(asset('public/frontend')); ?>/assets/images/groups/groups-bg-1.jpg" alt="image">
                                         </a>
                                     </div>
                                     <div class="groups-content">
                                         <div class="groups-info d-flex justify-content-between align-items-center">
                                             <a href="#">
-                                                @if(isset($page->hasLogoImage) && !empty($page->hasLogoImage->logo))
-                                                    <img src="{{ asset('public/frontend') }}/images/{{ $page->hasLogoImage->logo }}" alt="image">
-                                                @else
-                                                    <img src="{{ asset('public/frontend') }}/assets/images/groups/groups-1.jpg" alt="image">
-                                                @endif
+                                                <?php if(isset($page->hasLogoImage) && !empty($page->hasLogoImage->logo)): ?>
+                                                    <img src="<?php echo e(asset('public/frontend')); ?>/images/<?php echo e($page->hasLogoImage->logo); ?>" alt="image">
+                                                <?php else: ?>
+                                                    <img src="<?php echo e(asset('public/frontend')); ?>/assets/images/groups/groups-1.jpg" alt="image">
+                                                <?php endif; ?>
                                             </a>
                                             <div class="text ms-3">
-                                                <h3><a href="#">{{ $page->name }}</a></h3>
+                                                <h3><a href="#"><?php echo e($page->name); ?></a></h3>
                                             </div>
                                         </div>
                                         <ul class="statistics">
                                             <li>
                                                 <a href="#">
-                                                    <span class="item-number">{{ count($page->hasPosts) }}</span>
+                                                    <span class="item-number"><?php echo e(count($page->hasPosts)); ?></span>
                                                     <span class="item-text">Post</span>
                                                 </a>
                                             </li>
@@ -205,20 +203,20 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
-                    @endforeach
+                        <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
 
-                @if(count($data['pages']))
+                <?php if(count($data['pages'])): ?>
                     <div class="load-more-posts-btn">
                         <a href="#"><i class="flaticon-loading"></i> Load More</a>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
 
             <div class="tab-pane fade" id="create-new-page" role="tabpanel">
-                <form action="{{ route('page.store') }}" method="post" enctype="multipart/form-data">
-                    @csrf
+                <form action="<?php echo e(route('page.store')); ?>" method="post" enctype="multipart/form-data">
+                    <?php echo csrf_field(); ?>
                     <div class="row">
                         <div class="col-lg-6 col-sm-6">
                             <div class="single-groups-card">
@@ -230,8 +228,8 @@
                                     </div>
                                     <div class="mt-3">
                                         <div class="label" for="name">Name <span class="text-danger">*</span></div>
-                                        <input type="text" name="name" value="{{ old('name') }}" id="name" class="form-control" placeholder="Ener page name.">
-                                        <span class="text-danger">{{ $errors->first('name') }}</span>
+                                        <input type="text" name="name" value="<?php echo e(old('name')); ?>" id="name" class="form-control" placeholder="Ener page name.">
+                                        <span class="text-danger"><?php echo e($errors->first('name')); ?></span>
                                     </div>
                                     <div class="mt-3">
                                         <div class="label" for="category">Category</div>
@@ -242,7 +240,7 @@
                                     </div>
                                     <div class="mt-3">
                                         <div class="label" for="bio">Bio</div>
-                                        <textarea name="bio" id="bio" class="form-control" placeholder="Enter bio">{{ old('bio') }}</textarea>
+                                        <textarea name="bio" id="bio" class="form-control" placeholder="Enter bio"><?php echo e(old('bio')); ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -257,13 +255,13 @@
                                     </div>
                                     <div class="mt-3">
                                         <div class="label" for="email">Email <span class="text-danger">*</span></div>
-                                        <input type="text" name="email" value="{{ old('email') }}" id="email" class="form-control" placeholder="Ener email.">
-                                        <span class="text-danger">{{ $errors->first('email') }}</span>
+                                        <input type="text" name="email" value="<?php echo e(old('email')); ?>" id="email" class="form-control" placeholder="Ener email.">
+                                        <span class="text-danger"><?php echo e($errors->first('email')); ?></span>
                                     </div>
                                     <div class="mt-3">
                                         <div class="label" for="phone">Phone <span class="text-danger">*</span></div>
-                                        <input type="text" name="phone" value="{{ old('phone') }}" id="phone" class="form-control" placeholder="Ener phone.">
-                                        <span class="text-danger">{{ $errors->first('phone') }}</span>
+                                        <input type="text" name="phone" value="<?php echo e(old('phone')); ?>" id="phone" class="form-control" placeholder="Ener phone.">
+                                        <span class="text-danger"><?php echo e($errors->first('phone')); ?></span>
                                     </div>
                                     <div class="mt-3">
                                         <div class="label" for="website">Website</div>
@@ -282,15 +280,15 @@
                                     </div>
                                     <div class="mt-3">
                                         <div class="label" for="address">Address</div>
-                                        <input type="text" name="address" value="{{ old('address') }}" id="address" class="form-control" placeholder="Ener address.">
+                                        <input type="text" name="address" value="<?php echo e(old('address')); ?>" id="address" class="form-control" placeholder="Ener address.">
                                     </div>
                                     <div class="mt-3">
                                         <div class="label" for="city">City/Town</div>
-                                        <input type="text" name="city" value="{{ old('city') }}" id="city" class="form-control" placeholder="Ener city.">
+                                        <input type="text" name="city" value="<?php echo e(old('city')); ?>" id="city" class="form-control" placeholder="Ener city.">
                                     </div>
                                     <div class="mt-3">
                                         <div class="label" for="zipcode">Zipcode</div>
-                                        <input type="text" name="zipcode" value="{{ old('zipcode') }}" id="zipcode" class="form-control" placeholder="Ener zipcode.">
+                                        <input type="text" name="zipcode" value="<?php echo e(old('zipcode')); ?>" id="zipcode" class="form-control" placeholder="Ener zipcode.">
                                     </div>
                                 </div>
                             </div>
@@ -307,9 +305,9 @@
                                         <div class="label" for="friends">Friends</div>
                                         <select name="friends[]" id="friends" multiple class="form-control">
                                             <option value="" selected>Select Friends</option>
-                                            @foreach ($data['friends'] as $friend)
-                                                <option value="{{ $friend->friend_slug }}">{{ $friend->hasUser->name }}</option>
-                                            @endforeach
+                                            <?php $__currentLoopData = $data['friends']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $friend): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option value="<?php echo e($friend->friend_slug); ?>"><?php echo e($friend->hasUser->name); ?></option>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </select>
                                     </div>
                                     <div class="mt-3">
@@ -351,4 +349,6 @@
         </div>
     </div>
     <!-- End Content Page Box Area -->
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('frontend.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp\www\zust-sn\resources\views/frontend/home/pages.blade.php ENDPATH**/ ?>
